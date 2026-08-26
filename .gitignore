@@ -1,0 +1,12 @@
+.gradle/
+build/
+.kotlin/
+local.properties
+*.iml
+.idea/
+captures/
+.cxx/
+# Clon local de la referencia (otro repo con su propio .git; no se sube)
+referencias/
+# Configuración interna de la herramienta
+.codewhale/
