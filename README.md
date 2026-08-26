@@ -2,7 +2,7 @@
 
 Juego de deducción social **nativo para Android** (Kotlin + Jetpack Compose) en el que todos los jugadores conocen una palabra secreta excepto uno: **el impostor**, que debe fingir y adivinar la palabra sin ser descubierto.
 
-Versión inicial funcional: **v0.1.0** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano).
+Versión actual: **v0.2.0** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano).
 
 ## Cómo se juega
 
@@ -14,11 +14,12 @@ Versión inicial funcional: **v0.1.0** (modo local *pass & play*, un solo dispos
 
 > Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md).
 
-## Características actuales (v0.1.0)
+## Características actuales (v0.2.0)
 
 - Modo local **pass & play** (un solo dispositivo).
 - **110 palabras propias** en 11 categorías (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas).
 - 1–N impostores configurables; pista opcional para el impostor.
+- Selector de categorías funcional (v0.2.0, patrón ExposedDropdownMenuBox).
 - Revelación privada de roles con *mantén pulsado*.
 - Votación con confirmación y resultado de eliminación.
 - Pantalla de fin con la palabra secreta y roles revelados.
@@ -83,4 +84,10 @@ referencias/                 # Clon local de la referencia React (no se sube)
 
 ## Licencia
 
-Pendiente de definir. Por defecto, este repositorio no otorga licencia de uso (todos los derechos reservados) hasta que se decida.
+**CC BY-NC 4.0** — Creative Commons Atribución-NoComercial 4.0 Internacional.
+
+- ✅ Uso educativo y personal permitido.
+- ✅ Derivaciones y modificaciones permitidas, con atribución.
+- ❌ Uso comercial no permitido.
+
+Texto completo en [LICENSE](LICENSE). Resumen legible: https://creativecommons.org/licenses/by-nc/4.0/
