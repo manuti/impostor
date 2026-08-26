@@ -1,13 +1,13 @@
 # Contexto — Fase 2: usabilidad para personas mayores
 
 > Documento de arranque de sesión. Léelo completo antes de tocar código.
-> Creado: 2026-08-26 · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
+> Creado: 2026-08-26 · Actualizado: 2026-08-26 (cambios v0.1 → v0.2) · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
 
 ---
 
 ## 1. Objetivo de la fase 2
 
-Mejorar la **usabilidad para personas mayores** de la app *El Impostor* (v0.1.0 ya funcional y publicada).
+Mejorar la **usabilidad para personas mayores** de la app *El Impostor* (v0.2.0 publicada).
 Las mejoras se diseñan sobre la base actual, sin cambiar la mecánica del juego (reglas en `docs/investigacion.md` §1).
 
 **Fuera de alcance (no hacer):**
@@ -16,11 +16,17 @@ Las mejoras se diseñan sobre la base actual, sin cambiar la mecánica del juego
 
 ## 2. Estado actual del proyecto
 
-- **App funcional v0.1.0** (probada en dispositivo por el usuario): juego del impostor local *pass & play*.
-- **Publicada**: repo público `manuti/impostor`, release `v0.1.0` con APK adjunto (`el-impostor-v0.1.0.apk`).
+- **App funcional v0.2.0** (probada en dispositivo por el usuario): juego del impostor local *pass & play*.
+- **Publicada**: repo público `manuti/impostor`, releases `v0.1.0` y `v0.2.0` con APK adjunto (`el-impostor-v0.1.0.apk`, `el-impostor-v0.2.0.apk`).
 - **Stack**: Kotlin + Jetpack Compose (Material 3), AGP 9.3.0 con Kotlin integrado (built-in), Gradle 9.7.1 (wrapper), version catalog en `gradle/libs.versions.toml`, compileSdk 36 / minSdk 24.
-- **Git**: rama `main`, 1 commit (`f64bd67`), working tree limpio salvo 4 archivos sin trackear (ver §7).
-- **Licencia**: pendiente de decidir (README lo indica; por defecto "todos los derechos reservados").
+- **Git**: rama `main`, 4 commits (v0.1.0 → `f64bd67`, fix categorías v0.2.0 → `b24bb59`, licencia+docs → `65a6901`, contexto+gitignore); los mockups son locales e ignorados vía `.gitignore` (ver §7).
+- **Licencia**: **CC BY-NC 4.0** (Creative Commons Atribución-NoComercial 4.0 Internacional) — uso educativo y derivaciones permitidas con atribución; uso comercial prohibido. Archivo `LICENSE` con el texto legal completo (fuente SPDX).
+
+### Cambios v0.1.0 → v0.2.0
+
+- **Fix del selector de categorías** (`SetupScreen.kt`): en v0.1.0 el menú no se abría; en v0.2.0 se migró a `ExposedDropdownMenuBox` de Material 3 (detalle en §5).
+- **Versión**: `versionName` 0.1.0 → 0.2.0 · `versionCode` 1 → 2.
+- **Probado en dispositivo por el usuario (2026-08-26)**: las categorías se seleccionan y las palabras se filtran correctamente.
 
 ## 3. Cómo compilar, probar e instalar
 
@@ -45,7 +51,7 @@ app/src/main/kotlin/com/impostor/game/
 │                            #   · eliminatePlayer: condición de victoria (impostores ≥ civiles → ganan)
 │                            #   · resetGame: vuelve a SETUP
 ├── ui/screens/
-│   ├── SetupScreen.kt       # Jugadores, nº impostores, pista, CATEGORÍA (selector con bug, ver §5)
+│   ├── SetupScreen.kt       # Jugadores, nº impostores, pista, CATEGORÍA (ExposedDropdownMenuBox, corregido en v0.2.0)
 │   ├── RoleRevealScreen.kt  # "Mantén pulsado" para ver rol en privado (pointerInput + awaitFirstDown)
 │   ├── GameScreen.kt        # Debate: botones de jugador vivos/eliminados, confirmación de voto
 │   └── EndGameScreen.kt     # Victoria, palabra secreta, roles revelados, "Jugar de Nuevo"
@@ -59,21 +65,22 @@ Notas:
 - No hay ViewModel ni navegación; todo el estado vive en `App.kt` (válido para MVP, pero la fase 2 añadirá ajustes de UI).
 - Las pantallas usan `dp` fijos (ej. botones de 56.dp) y colores literales (`0xFFF87171`, etc.) — relevantes para los cambios de accesibilidad.
 
-## 5. BUG CONOCIDO: el selector de categorías no funciona (corregir en esta fase)
+## 5. BUG CORREGIDO en v0.2.0: el selector de categorías
 
-**Síntoma reportado por el usuario (v0.1.0):** las categorías de palabras no funcionan.
+**Síntoma (v0.1.0):** las categorías de palabras no funcionaban (el menú no se abría).
 
-**Diagnóstico (revisado en código):**
-- La lógica de filtrado es correcta: `getRandomWord(category)` filtra `wordList` por `it.category == category`, y los nombres de categoría del menú son exactamente los de `wordList` (`getAllCategories()`).
-- El problema está en `SetupScreen.kt` (~línea 213): se usa el patrón
+**Diagnóstico (confirmado):**
+- La lógica de filtrado era correcta: `getRandomWord(category)` filtra `wordList` por `it.category == category`, y los nombres de categoría del menú coinciden exactamente con los de `wordList` (`getAllCategories()`).
+- El fallo estaba en `SetupScreen.kt`: se usaba el patrón
   `OutlinedTextField(readOnly = true, modifier = Modifier.clickable { categoryMenuOpen = true })`.
-  **Este patrón no funciona en Compose**: el `TextField` consume el gesto de toque y el `clickable` externo no llega a dispararse (fallo conocido: stackoverflow.com/q/67902919, JetBrains/compose-multiplatform#220). Resultado: tocar el campo no abre el menú → el usuario no puede cambiar de categoría.
+  **Ese patrón no funciona en Compose**: el `TextField` consume el gesto de toque y el `clickable` externo no llega a dispararse (fallo conocido: stackoverflow.com/q/67902919, JetBrains/compose-multiplatform#220).
 
-**Fix propuesto (a implementar y verificar en dispositivo):**
-- Usar el patrón oficial de Material 3: `ExposedDropdownMenuBox` + `ExposedDropdownMenu` (además mejora la accesibilidad del selector, alineado con la fase 2).
-- Alternativa rápida si el anterior diera problemas: Box envolvente con un overlay `clickable` transparente encima del TextField.
+**Fix aplicado en v0.2.0 (commit `b24bb59`):**
+- Migrado al patrón oficial de Material 3: `ExposedDropdownMenuBox` + `ExposedDropdownMenu` (es **miembro del scope** `ExposedDropdownMenuBoxScope`, no es importable como función top-level) + `menuAnchor(MenuAnchorType.PrimaryNotEditable)` + `ExposedDropdownMenuDefaults.TrailingIcon`.
+- Requiere `@OptIn(ExperimentalMaterial3Api::class)` (API experimental en material3 1.3.0).
+- **Verificado en dispositivo por el usuario (2026-08-26): funciona.**
 
-**Verificación:** seleccionar cada categoría → la palabra revelada debe pertenecer a esa categoría (el impostor ve la pista, no la palabra; la categoría se muestra en GameScreen y EndGameScreen).
+**Lección para la fase 2 (accesibilidad):** `ExposedDropdownMenuBox` es además el patrón recomendado para selectores accesibles (TalkBack anuncia el estado expandido/colapsado) — usarlo para cualquier selector nuevo.
 
 ## 6. Puntos de partida para la usabilidad (fase 2)
 
@@ -99,12 +106,13 @@ Base: `docs/investigacion.md` §6 (8 puntos detectados al comparar las versiones
 
 ## 7. Mockups disponibles (sin commitear, en la raíz del proyecto)
 
-El usuario generó 4 mockups de UI con diferentes herramientas — **revisarlos antes de rediseñar**:
+El usuario generó mockups de UI con diferentes herramientas — **revisarlos antes de rediseñar**:
 
-- `mockup-Claude.html` y `mockup-DeepSeek.html` (HTML interactivo — abrir con navegador o leer el código)
-- `mockup-chaggpt.png` y `mockup-gemini.png` (imágenes)
+- HTML interactivo: `mockup-Claude.html`, `mockup-DeepSeek.html` (abrir con navegador o leer el código)
+- Imágenes: `mockup-chaggpt.png`, `mockup-gemini.png`
+- Descripciones/texto: `mockup-claude.md`, `mockup-DeepSeek.md`, `mockup-chatgpt.md`, `mockup-gemini.md`
 
-Están sin trackear en git (`git status` los muestra como `??`). Decidir con el usuario si se incorporan al repo (p. ej. `docs/mockups/`) y cuál se toma como referencia visual para la fase 2.
+Están **ignorados en git** (`.gitignore` → `mockup-*`): son solo para trabajo local y **no se suben al repo**. No incorporarlos salvo decisión contraria del usuario. Tomar uno o varios como referencia visual para la fase 2.
 
 ## 8. Referencias útiles
 
@@ -118,4 +126,4 @@ Están sin trackear en git (`git status` los muestra como `??`). Decidir con el 
 - **No tocar la mecánica del juego** salvo aprobación explícita del usuario (las reglas están bien).
 - Cambios pequeños e incrementales; compilar y probar en dispositivo tras cada cambio.
 - Mantener el idioma de la UI en español (es-419).
-- Al terminar la fase 2: actualizar README, versionar (v0.2.0), publicar release con el APK nuevo y commitear (incluida la decisión de licencia si el usuario la toma).
+- Al terminar la fase 2: actualizar README, versionar a v0.3.0 (incrementar `versionCode`), publicar release con el APK nuevo y commitear.
