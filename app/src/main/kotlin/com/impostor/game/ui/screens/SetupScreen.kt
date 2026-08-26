@@ -1,6 +1,5 @@
 package com.impostor.game.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,11 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.impostor.game.game.GameConfig
 import com.impostor.game.game.getAllCategories
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SetupScreen(
     initialPlayerNames: List<String>,
@@ -209,18 +211,23 @@ fun SetupScreen(
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(8.dp))
-        Box(Modifier.fillMaxWidth()) {
+        // ExposedDropdownMenuBox: patrón oficial de M3. El toque en el campo abre el menú
+        // (el patrón anterior con Modifier.clickable no funcionaba: el TextField consume el gesto).
+        ExposedDropdownMenuBox(
+            expanded = categoryMenuOpen,
+            onExpandedChange = { categoryMenuOpen = it },
+        ) {
             OutlinedTextField(
                 value = selectedCategory,
                 onValueChange = {},
                 readOnly = true,
                 singleLine = true,
-                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryMenuOpen) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { categoryMenuOpen = true },
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable),
             )
-            DropdownMenu(
+            ExposedDropdownMenu(
                 expanded = categoryMenuOpen,
                 onDismissRequest = { categoryMenuOpen = false },
             ) {
