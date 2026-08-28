@@ -121,6 +121,7 @@ Están **ignorados en git** (`.gitignore` → `mockups/`): son solo para trabajo
 
 - `docs/investigacion.md` — reglas del juego, comparativa de repos, sección 6 con mejoras de usabilidad.
 - `docs/PLAN-FASE2.md` — **plan definitivo de usabilidad fase 2** (borrador en revisión por el usuario; revisa todos los mockups html/md/recreación con exclusiones por contradicción o error, consenso, decisiones y cambios por pantalla).
+- `docs/PLAN-FASE2.5.md` — **plan de mejoras intermedias (v0.3.x)** con reglas para no complicar las fases 3 (i18n) y 4 (publicación en Google Play).
 - `docs/PLAN-FASE3.md` — plan futuro de i18n (v0.4.0) con reglas vinculantes para no complicar la fase 2.
 - `README.md` — instrucciones de build e info general.
 - `referencias/Impostor-juego/` — clon local de la referencia React (no se sube a git; solo estudio).

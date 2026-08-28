@@ -87,9 +87,9 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] v0.1.0 — MVP local funcional (pass & play)
 - [x] v0.2.0 — Selector de categorías corregido (ExposedDropdownMenuBox)
 - [x] **v0.3.0 — Fase 2: usabilidad para personas mayores** (naipe giratorio, tema claro/oscuro, texto grande, contraste AA, daltonismo, confirmaciones, primer participante justo)
+- [ ] **Fase 2.5 — Mejoras intermedias** (v0.3.x; plan y lista de mejoras en `docs/PLAN-FASE2.5.md`)
 - [ ] Fase 3 — Internacionalización (i18n): plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
-- [ ] Modo online multijugador (valoración: backend propio o WebRTC)
-- [ ] Versión iOS (SwiftUI) o PWA compartida
+- [ ] Fase 4 — Publicación en Google Play (animación de inicio, telemetrydeck, requisitos de la tienda); plan a actualizar según el cierre de fases 2 y 2.5
 
 ## Agradecimientos
 

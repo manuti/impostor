@@ -1,7 +1,7 @@
 # Plan — Fase 3: i18n / internacionalización (v0.4.0)
 
 > **Estado: propuesta para una fase FUTURA. No implementar ahora.**
-> La §4 (reglas para fase 2) **es vinculante**: toda la fase 2 debe respetarla para no complicar la i18n posterior.
+> La §4 (reglas para las fases 2 y 2.5) **es vinculante**: las fases 2 y 2.5 deben respetarla para no complicar la i18n posterior.
 
 ---
 
@@ -38,7 +38,7 @@ Hacer la app multidioma: español (es-419, default) + inglés como primer idioma
 8. TTS en el idioma del locale (recordar: solo textos no secretos; nunca la palabra/pista — ver `CONTEXTO-FASE2.md` §6 punto 6).
 9. Publicación: v0.4.0 (incrementar `versionCode`), release con APK, README.
 
-## 4. Reglas vinculantes para la fase 2 (no complicar la i18n futura)
+## 4. Reglas vinculantes para las fases 2 y 2.5 (no complicar la i18n futura)
 
 1. **Todo texto nuevo o reescrito de UI va a `res/values/strings.xml`** (es-419 como default) y se usa con `stringResource(R.string.x)`. Prohibido añadir strings hardcodeados nuevos en Kotlin.
 2. **Nada de concatenación de texto**: usar placeholders (`"Jugador %1$d de %2$d"`, `"Pista: %1$s"`). Los datos dinámicos (nombres, conteos, categoría, pista) siempre como argumentos.
@@ -58,5 +58,6 @@ Hacer la app multidioma: español (es-419, default) + inglés como primer idioma
 ## 6. Relación con otras fases
 
 - La fase 2 (usabilidad, v0.3.0) deja la infraestructura de strings lista y aplica estas reglas.
-- La fase 3 (i18n, v0.4.0) es mayoritariamente "rellenar traducciones + selector de idioma + contenido localizado".
+- La **fase 2.5** (mejoras intermedias, `PLAN-FASE2.5.md`) también aplica estas reglas; sus cambios no deben acoplar contenido a cadenas.
+- La fase 3 (i18n) es mayoritariamente "rellenar traducciones + selector de idioma + contenido localizado" (su versión exacta depende de la decisión de versionado de la 2.5).
 - La TTS (descartada para palabra/pista) podría reaparecer solo como lectura de instrucciones/tutorial localizadas, nunca sobre contenido secreto.
