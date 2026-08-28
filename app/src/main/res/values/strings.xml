@@ -1,4 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">El Impostor</string>
+
+    <!-- Comunes -->
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_abandon">ABANDONAR</string>
+    <string name="action_leave">← Salir</string>
+
+    <!-- Tema -->
+    <string name="theme_to_light_cd">Cambiar a tema claro</string>
+    <string name="theme_to_dark_cd">Cambiar a tema oscuro</string>
+
+    <!-- Cómo se juega -->
+    <string name="help_title">Cómo se juega</string>
+    <string name="help_line1">El objetivo es descubrir al impostor.</string>
+    <string name="help_line2">Cada jugador mira su naipe en privado y pasa el móvil al siguiente.</string>
+    <string name="help_line3">El impostor ve una pista, no la palabra.</string>
+    <string name="help_line4">En el debate, hablad de vuestra palabra sin decirla.</string>
+    <string name="help_line5">Votad para eliminar al sospechoso.</string>
+
+    <!-- Setup -->
+    <string name="setup_title">El Impostor</string>
+    <string name="setup_subtitle">Configura la partida</string>
+    <string name="setup_players_section">Jugadores (%1$d)</string>
+    <string name="setup_player_name_placeholder">Nombre del jugador</string>
+    <string name="setup_add_player">Añadir</string>
+    <string name="setup_remove_player_cd">Eliminar a %1$s</string>
+    <string name="setup_min_players">Necesitas al menos 3 jugadores</string>
+    <string name="setup_impostors_section">Número de impostores</string>
+    <string name="setup_impostors_max">Máximo: %1$d (siempre menos que jugadores)</string>
+    <string name="setup_hint_switch">Pista para el impostor</string>
+    <string name="setup_hint_on">El impostor verá una pista</string>
+    <string name="setup_hint_off">Sin pista, más difícil</string>
+    <string name="setup_category_section">Categoría de palabras</string>
+    <string name="setup_category_all">Todas</string>
+    <string name="setup_category_all_hint">Palabras de todas las categorías</string>
+    <string name="setup_category_only_hint">Solo palabras de %1$s</string>
+    <string name="setup_start">Empezar Partida</string>
+    <string name="setup_confirm_remove_title">Eliminar jugador</string>
+    <string name="setup_confirm_remove_text">¿Quieres eliminar a %1$s?</string>
+
+    <plurals name="setup_summary_players">
+        <item quantity="one">%1$d jugador</item>
+        <item quantity="other">%1$d jugadores</item>
+    </plurals>
+    <plurals name="setup_summary_impostors">
+        <item quantity="one">%1$d impostor</item>
+        <item quantity="other">%1$d impostores</item>
+    </plurals>
+
+    <!-- Revelado de rol -->
+    <string name="role_progress">Jugador %1$d de %2$d</string>
+    <string name="role_your_role">TU ROL ES:</string>
+    <string name="role_impostor">ERES IMPOSTOR</string>
+    <string name="role_your_hint">Tu pista es:</string>
+    <string name="role_your_word">TU PALABRA ES</string>
+    <string name="role_tap_to_view">TOCA PARA VER</string>
+    <string name="role_next">Siguiente Jugador</string>
+    <string name="role_start_game">Empezar Partida</string>
+    <string name="role_must_view">Por favor, mira tu rol antes de continuar</string>
+    <string name="role_seen_title">HAS VISTO TU ROL</string>
+    <string name="role_seen_sub">Puedes continuar</string>
+    <string name="role_pass_phone">Pasa el móvil al siguiente jugador</string>
+    <string name="role_card_locked_cd">Naipe cerrado. Toca para ver tu rol</string>
+    <string name="role_card_revealed_cd">Naipe abierto con tu rol</string>
+    <string name="role_exit_title">Salir de la partida</string>
+    <string name="role_exit_text">¿Seguro que quieres salir de la partida?</string>
+
+    <!-- Debate -->
+    <string name="game_title">Debate</string>
+    <string name="game_instructions">Habla sobre tu palabra sin decirla. Encuentra al impostor.</string>
+    <string name="game_category">Categoría: %1$s</string>
+    <string name="game_alive">● Vivos (%1$d)</string>
+    <string name="game_dead">● Eliminados (%1$d)</string>
+    <string name="game_role_impostor">Impostor</string>
+    <string name="game_role_civil">Civil</string>
+    <string name="game_player_with_role">%1$s (%2$s)</string>
+    <string name="game_civilians_alive">Civiles vivos</string>
+    <string name="game_impostors_alive">Impostores vivos</string>
+    <string name="game_vote_hint">Pulsa en un jugador para votarlo</string>
+    <string name="game_eliminate_title">Eliminar jugador</string>
+    <string name="game_eliminate_text">¿Estás seguro de que quieres eliminar a %1$s?</string>
+    <string name="game_eliminate">Eliminar</string>
+    <string name="game_was_impostor">Era IMPOSTOR</string>
+    <string name="game_was_civil">Era CIVIL</string>
+    <string name="game_impostor_found">¡Habéis eliminado a un impostor!</string>
+    <string name="game_innocent">Era inocente…</string>
+    <string name="game_continue">Continuar</string>
+    <string name="game_starting_player_title">🎯 Jugador inicial</string>
+    <string name="game_starting_player_you">¡Empieza tú!</string>
+    <string name="game_starting_player_close">Toca para cerrar</string>
+    <string name="game_abandon_title">Abandonar partida</string>
+    <string name="game_abandon_text">¿Seguro que quieres abandonar la partida?</string>
+
+    <!-- Fin -->
+    <string name="end_victory_civil">Victoria Civil!</string>
+    <string name="end_victory_impostor">Victoria Impostor!</string>
+    <string name="end_civil_text">Los civiles han eliminado a todos los impostores</string>
+    <string name="end_impostor_text">Los impostores han igualado en número a los civiles</string>
+    <string name="end_word_was">La palabra era:</string>
+    <string name="end_hint">Pista: %1$s</string>
+    <string name="end_impostors_list">Impostores (%1$d):</string>
+    <string name="end_civilians_list">Civiles (%1$d):</string>
+    <string name="end_play_again">Jugar de Nuevo</string>
 </resources>

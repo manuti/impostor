@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Forma del ojo (sin pupila): ocupa casi todo el viewport para poder mostrarse
+     ENORME en el anverso del naipe. Se tiñe con el color del tema (GameColors.eye)
+     y la pupila se dibuja encima con GameColors.eyePupil. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M2,24 C8,12.5 16.5,8.5 24,8.5 C31.5,8.5 40,12.5 46,24 C40,35.5 31.5,39.5 24,39.5 C16.5,39.5 8,35.5 2,24 Z" />
+</vector>

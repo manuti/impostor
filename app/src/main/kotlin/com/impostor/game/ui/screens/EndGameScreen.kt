@@ -22,17 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.impostor.game.R
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
-
-private val Red = Color(0xFFF87171)
-private val Blue = Color(0xFF60A5FA)
+import com.impostor.game.ui.theme.gameColors
 
 @Composable
 fun EndGameScreen(
@@ -44,6 +44,11 @@ fun EndGameScreen(
     val civilsWon = winner == Role.CIVILIAN
     val impostors = players.filter { it.role == Role.IMPOSTOR }
     val civilians = players.filter { it.role == Role.CIVILIAN }
+    val gameColors = MaterialTheme.gameColors
+
+    val accent = if (civilsWon) gameColors.civil else gameColors.impostor
+    val accentBg = if (civilsWon) gameColors.civilBg else gameColors.impostorBg
+    val onAccentBg = if (civilsWon) gameColors.onCivilBg else gameColors.onImpostorBg
 
     Column(
         modifier = Modifier
@@ -54,11 +59,8 @@ fun EndGameScreen(
     ) {
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = if (civilsWon) Color(0xFF1E3A8A).copy(alpha = 0.45f) else Color(0xFF7F1D1D).copy(alpha = 0.45f),
-            border = BorderStroke(
-                1.dp,
-                (if (civilsWon) Blue else Red).copy(alpha = 0.5f),
-            ),
+            color = accentBg.copy(alpha = 0.45f),
+            border = BorderStroke(2.dp, accent.copy(alpha = 0.6f)),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
@@ -71,19 +73,15 @@ fun EndGameScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = if (civilsWon) "Victoria Civil!" else "Victoria Impostor!",
+                    text = stringResource(if (civilsWon) R.string.end_victory_civil else R.string.end_victory_impostor),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = if (civilsWon) Blue else Red,
+                    color = accent,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = if (civilsWon) {
-                        "Los civiles han eliminado a todos los impostores"
-                    } else {
-                        "Los impostores han igualado en número a los civiles"
-                    },
+                    text = stringResource(if (civilsWon) R.string.end_civil_text else R.string.end_impostor_text),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
@@ -93,7 +91,7 @@ fun EndGameScreen(
                 // Palabra secreta
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = Color.Black.copy(alpha = 0.3f),
+                    color = Color.Black.copy(alpha = 0.25f),
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Column(
@@ -101,7 +99,7 @@ fun EndGameScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = "La palabra era:",
+                            text = stringResource(R.string.end_word_was),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -109,10 +107,10 @@ fun EndGameScreen(
                             text = currentWord.word,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
-                            text = "Pista: ${currentWord.hint}",
+                            text = stringResource(R.string.end_hint, currentWord.hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -122,24 +120,24 @@ fun EndGameScreen(
 
                 // Listas de roles
                 Text(
-                    text = "Impostores (${impostors.size}):",
+                    text = stringResource(R.string.end_impostors_list, impostors.size),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Red,
+                    color = gameColors.impostor,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(4.dp))
-                PlayerChips(impostors, Red)
+                PlayerChips(impostors, gameColors.impostor)
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    text = "Civiles (${civilians.size}):",
+                    text = stringResource(R.string.end_civilians_list, civilians.size),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Blue,
+                    color = gameColors.civil,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(4.dp))
-                PlayerChips(civilians, Blue)
+                PlayerChips(civilians, gameColors.civil)
             }
         }
 
@@ -149,10 +147,10 @@ fun EndGameScreen(
             onClick = onPlayAgain,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(64.dp),
         ) {
             Text(
-                text = "Jugar de Nuevo",
+                text = stringResource(R.string.end_play_again),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
@@ -180,7 +178,7 @@ private fun PlayerChips(players: List<Player>, color: Color) {
             ) {
                 Text(
                     text = player.name,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     color = color.copy(alpha = if (player.isAlive) 1f else 0.5f),
                     textDecoration = if (player.isAlive) null else TextDecoration.LineThrough,

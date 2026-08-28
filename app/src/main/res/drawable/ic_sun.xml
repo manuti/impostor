@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sol: tema claro (se muestra cuando el tema actual es oscuro). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFB300"
+        android:pathData="M12,7 a5,5 0 1,0 0.001,0 Z" />
+    <path
+        android:strokeColor="#FFFFB300"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M12,2v2 M12,20v2 M2,12h2 M20,12h2 M4.9,4.9l1.4,1.4 M17.7,17.7l1.4,1.4 M19.1,4.9l-1.4,1.4 M6.3,17.7l-1.4,1.4" />
+</vector>

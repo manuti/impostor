@@ -10,5 +10,5 @@ captures/
 referencias/
 # Configuración interna de la herramienta
 .codewhale/
-# Mockups de trabajo local (no se suben al repo)
-mockup-*
+# Mockups y recreaciones de trabajo local (no se suben al repo)
+mockups/

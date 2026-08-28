@@ -1,7 +1,9 @@
 # Contexto — Fase 2: usabilidad para personas mayores
 
 > Documento de arranque de sesión. Léelo completo antes de tocar código.
-> Creado: 2026-08-26 · Actualizado: 2026-08-26 (cambios v0.1 → v0.2) · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
+> Creado: 2026-08-26 · Actualizado: 2026-08-28 (fase 2 cerrada) · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
+
+> ✅ **FASE 2 CERRADA (2026-08-28)**: publicada **v0.3.0** con la usabilidad para personas mayores (plan en `docs/PLAN-FASE2.md`) y los 4 bugs detectados corregidos y verificados (`docs/BUGS.md`). Siguiente: fase 3 i18n (`docs/PLAN-FASE3.md`).
 
 ---
 
@@ -84,14 +86,14 @@ Notas:
 
 ## 6. Puntos de partida para la usabilidad (fase 2)
 
-Base: `docs/investigacion.md` §6 (8 puntos detectados al comparar las versiones existentes). Pendiente de concretar la lista definitiva con el usuario:
+Base: `docs/investigacion.md` §6 (8 puntos detectados al comparar las versiones existentes). Lista definitiva en `docs/PLAN-FASE2.md` (borrador en revisión por el usuario; puntos abajo pendientes de su OK):
 
 1. **Texto grande y legible**: tipografía mayor y configurable; evitar tamaños < 16sp en contenido.
 2. **Alto contraste**: revisar colores literales (rojo/azul/verde sobre fondo oscuro) contra WCAG AA; opción de tema claro.
 3. **Objetivos táctiles grandes**: botones ≥ 56dp ya en parte; ampliar zonas táctiles de filas, iconos y chips.
 4. **Sin gestos complejos**: "mantén pulsado" para revelar rol puede ser difícil (tremor) → alternativa con botón grande "Toca para revelar" y más tiempo de lectura; ampliar el hold de 300 ms.
 5. **Tiempos ampliados / sin prisa**: quitar o relajar límites de tiempo; no hay timer en la v0.1 (bien), mantenerlo así o hacerlo opcional.
-6. **TTS (lectura en voz alta)**: botón para que la app lea la palabra/pista al jugador (android.speech.tts.TextToSpeech).
+6. **TTS (lectura en voz alta)** — ❌ **Descartado (decisión del usuario, 2026-08-26)**: leer la palabra o la pista en voz alta rompe el secreto del juego (pass & play: todos los jugadores oirían la palabra y el impostor la conocería). No implementar TTS sobre palabra/pista. Posible uso futuro solo en textos no secretos (instrucciones/tutorial), nunca sobre la palabra o la pista.
 7. **Lenguaje sencillo + iconos grandes**: sustituir jerga ("blufear", "pass & play"); instrucciones claras paso a paso en cada pantalla.
 8. **Seguridad y recuperación**: confirmaciones claras antes de acciones destructivas (ya existe en votación/salir); mantener "deshacer" donde aplique.
 9. **Tutorial guiado**: primera partida con explicación por pasos (o pantalla de "Cómo se juega" con imágenes).
@@ -104,19 +106,22 @@ Base: `docs/investigacion.md` §6 (8 puntos detectados al comparar las versiones
 - [ ] Tamaño táctil: todos los objetivos ≥ 48dp (ideal 56dp).
 - [ ] Prueba con una persona mayor real si es posible (objetivo final).
 
-## 7. Mockups disponibles (sin commitear, en la raíz del proyecto)
+## 7. Mockups disponibles (carpeta local `mockups/`, ignorada en git)
 
 El usuario generó mockups de UI con diferentes herramientas — **revisarlos antes de rediseñar**:
 
-- HTML interactivo: `mockup-Claude.html`, `mockup-DeepSeek.html` (abrir con navegador o leer el código)
-- Imágenes: `mockup-chaggpt.png`, `mockup-gemini.png`
-- Descripciones/texto: `mockup-claude.md`, `mockup-DeepSeek.md`, `mockup-chatgpt.md`, `mockup-gemini.md`
+- HTML interactivo: `mockups/mockup-claude.html`, `mockups/mockup-DeepSeek.html` (abrir con navegador o leer el código)
+- Imágenes: `mockups/mockup-chatgpt.png`, `mockups/mockup-gemini.png`
+- Descripciones/texto: `mockups/mockup-claude.md`, `mockups/mockup-DeepSeek.md`, `mockups/mockup-chatgpt.md`, `mockups/mockup-gemini.md`
+- Recreación legible de los PNG: `mockups/recreacion-mockups.html` (referencia visual de la fase 2)
 
-Están **ignorados en git** (`.gitignore` → `mockup-*`): son solo para trabajo local y **no se suben al repo**. No incorporarlos salvo decisión contraria del usuario. Tomar uno o varios como referencia visual para la fase 2.
+Están **ignorados en git** (`.gitignore` → `mockups/`): son solo para trabajo local y **no se suben al repo**. No incorporarlos salvo decisión contraria del usuario.
 
 ## 8. Referencias útiles
 
 - `docs/investigacion.md` — reglas del juego, comparativa de repos, sección 6 con mejoras de usabilidad.
+- `docs/PLAN-FASE2.md` — **plan definitivo de usabilidad fase 2** (borrador en revisión por el usuario; revisa todos los mockups html/md/recreación con exclusiones por contradicción o error, consenso, decisiones y cambios por pantalla).
+- `docs/PLAN-FASE3.md` — plan futuro de i18n (v0.4.0) con reglas vinculantes para no complicar la fase 2.
 - `README.md` — instrucciones de build e info general.
 - `referencias/Impostor-juego/` — clon local de la referencia React (no se sube a git; solo estudio).
 - Repos de referencia para UX/accesibilidad vistos en la investigación: `Adolfo-GM/impostor` (hold-to-reveal), `find-the-impostor` (i18n, UI cuidada), `imposter-party-game-IOS-` (estructura por pantallas).

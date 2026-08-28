@@ -1,5 +1,6 @@
 package com.impostor.game.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -29,22 +29,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.impostor.game.R
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
+import com.impostor.game.ui.theme.gameColors
 import kotlinx.coroutines.delay
-
-private val Green = Color(0xFF4ADE80)
-private val Red = Color(0xFFF87171)
-private val Blue = Color(0xFF60A5FA)
 
 /**
  * Pantalla de debate: votar y eliminar a un jugador (portada de la referencia).
+ * Fase 2: strings externalizados, confirmación al salir, tokens de color y objetivos grandes.
  */
 @Composable
 fun GameScreen(
@@ -57,6 +57,8 @@ fun GameScreen(
     var selectedPlayer by remember { mutableStateOf<Player?>(null) }
     var eliminatedPlayer by remember { mutableStateOf<Player?>(null) }
     var showStartingPlayer by remember { mutableStateOf(true) }
+    var showAbandonDialog by remember { mutableStateOf(false) }
+    val gameColors = MaterialTheme.gameColors
 
     // Auto-cerrar el aviso del jugador inicial tras 3 segundos.
     LaunchedEffect(Unit) {
@@ -79,23 +81,26 @@ fun GameScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Debate",
+                text = stringResource(R.string.game_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
-            TextButton(onClick = onAbandonGame) {
-                Text("✕ Abandonar", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = { showAbandonDialog = true }, modifier = Modifier.height(48.dp)) {
+                Text(
+                    text = stringResource(R.string.action_leave),
+                    style = MaterialTheme.typography.titleSmall,
+                )
             }
         }
         Text(
-            text = "Habla sobre tu palabra sin decirla. Encuentra al impostor.",
+            text = stringResource(R.string.game_instructions),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
         Text(
-            text = "Categoría: ${currentWord.category}",
+            text = stringResource(R.string.game_category, currentWord.category),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -103,10 +108,10 @@ fun GameScreen(
 
         // Jugadores vivos
         Text(
-            text = "● Vivos (${alivePlayers.size})",
+            text = stringResource(R.string.game_alive, alivePlayers.size),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
-            color = Green,
+            color = gameColors.success,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(8.dp))
@@ -125,10 +130,11 @@ fun GameScreen(
                         ),
                         modifier = Modifier
                             .weight(1f)
-                            .height(56.dp),
+                            .height(64.dp),
                     ) {
                         Text(
                             text = player.name,
+                            style = MaterialTheme.typography.labelLarge,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -143,10 +149,10 @@ fun GameScreen(
         if (deadPlayers.isNotEmpty()) {
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "● Eliminados (${deadPlayers.size})",
+                text = stringResource(R.string.game_dead, deadPlayers.size),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = Red,
+                color = gameColors.impostor,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(8.dp))
@@ -156,17 +162,20 @@ fun GameScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     chunk.forEach { player ->
-                        val deadColor = if (player.role == Role.IMPOSTOR) Red else Blue
+                        val deadColor = if (player.role == Role.IMPOSTOR) gameColors.impostor else gameColors.civil
+                        val roleName = stringResource(
+                            if (player.role == Role.IMPOSTOR) R.string.game_role_impostor else R.string.game_role_civil
+                        )
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(48.dp)
+                                .height(52.dp)
                                 .background(deadColor.copy(alpha = 0.12f), RoundedCornerShape(12.dp))
                                 .border(1.dp, deadColor.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                text = "${player.name} (${if (player.role == Role.IMPOSTOR) "Impostor" else "Civil"})",
+                                text = stringResource(R.string.game_player_with_role, player.name, roleName),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = deadColor,
                                 maxLines = 1,
@@ -192,10 +201,10 @@ fun GameScreen(
                     text = "${alivePlayers.count { it.role == Role.CIVILIAN }}",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Blue,
+                    color = gameColors.civil,
                 )
                 Text(
-                    text = "Civiles vivos",
+                    text = stringResource(R.string.game_civilians_alive),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -205,10 +214,10 @@ fun GameScreen(
                     text = "${alivePlayers.count { it.role == Role.IMPOSTOR }}",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Red,
+                    color = gameColors.impostor,
                 )
                 Text(
-                    text = "Impostores vivos",
+                    text = stringResource(R.string.game_impostors_alive),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -216,9 +225,37 @@ fun GameScreen(
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Pulsa en un jugador para votarlo",
+            text = stringResource(R.string.game_vote_hint),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+
+    // Confirmación al abandonar
+    if (showAbandonDialog) {
+        AlertDialog(
+            onDismissRequest = { showAbandonDialog = false },
+            title = { Text(stringResource(R.string.game_abandon_title)) },
+            text = { Text(stringResource(R.string.game_abandon_text)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showAbandonDialog = false
+                        onAbandonGame()
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.action_abandon),
+                        color = gameColors.impostor,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAbandonDialog = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
         )
     }
 
@@ -226,8 +263,8 @@ fun GameScreen(
     selectedPlayer?.let { sel ->
         AlertDialog(
             onDismissRequest = { selectedPlayer = null },
-            title = { Text("Eliminar jugador") },
-            text = { Text("¿Estás seguro de que quieres eliminar a ${sel.name}?") },
+            title = { Text(stringResource(R.string.game_eliminate_title)) },
+            text = { Text(stringResource(R.string.game_eliminate_text, sel.name)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -236,11 +273,17 @@ fun GameScreen(
                         onEliminatePlayer(sel.id)
                     },
                 ) {
-                    Text("Eliminar", color = Red, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(R.string.game_eliminate),
+                        color = gameColors.impostor,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             },
             dismissButton = {
-                TextButton(onClick = { selectedPlayer = null }) { Text("Cancelar") }
+                TextButton(onClick = { selectedPlayer = null }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
             },
         )
     }
@@ -250,11 +293,11 @@ fun GameScreen(
         val wasImpostor = elim.role == Role.IMPOSTOR
         AlertDialog(
             onDismissRequest = {},
-            containerColor = if (wasImpostor) Color(0xFF7F1D1D) else Color(0xFF1E3A8A),
+            containerColor = if (wasImpostor) gameColors.impostorBg else gameColors.civilBg,
             title = {
                 Text(
                     text = elim.name,
-                    color = Color.White,
+                    color = if (wasImpostor) gameColors.onImpostorBg else gameColors.onCivilBg,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
@@ -263,15 +306,15 @@ fun GameScreen(
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = if (wasImpostor) "Era IMPOSTOR" else "Era CIVIL",
+                        text = stringResource(if (wasImpostor) R.string.game_was_impostor else R.string.game_was_civil),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = if (wasImpostor) Color(0xFFFCA5A5) else Color(0xFF93C5FD),
+                        color = if (wasImpostor) gameColors.onImpostorBg else gameColors.onCivilBg,
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = if (wasImpostor) "¡Habéis eliminado a un impostor!" else "Era inocente...",
-                        color = Color.White,
+                        text = stringResource(if (wasImpostor) R.string.game_impostor_found else R.string.game_innocent),
+                        color = if (wasImpostor) gameColors.onImpostorBg else gameColors.onCivilBg,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -282,8 +325,8 @@ fun GameScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
-                        text = "Continuar",
-                        color = Color.White,
+                        text = stringResource(R.string.game_continue),
+                        color = if (wasImpostor) gameColors.onImpostorBg else gameColors.onCivilBg,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
@@ -298,36 +341,36 @@ fun GameScreen(
         Dialog(onDismissRequest = { showStartingPlayer = false }) {
             Surface(
                 shape = RoundedCornerShape(24.dp),
-                color = Color(0xFF4C1D95),
-                border = androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFA78BFA)),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
             ) {
                 Column(
                     modifier = Modifier.padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "🎯 Jugador inicial",
+                        text = stringResource(R.string.game_starting_player_title),
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color(0xFFC4B5FD),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = startingPlayer,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "¡Empieza tú!",
+                        text = stringResource(R.string.game_starting_player_you),
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFFC4B5FD),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = "Toca para cerrar",
+                        text = stringResource(R.string.game_starting_player_close),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                     )
                 }
             }

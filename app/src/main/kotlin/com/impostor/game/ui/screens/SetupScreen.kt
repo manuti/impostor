@@ -1,7 +1,6 @@
 package com.impostor.game.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,24 +8,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +37,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.impostor.game.R
 import com.impostor.game.game.GameConfig
 import com.impostor.game.game.getAllCategories
+import com.impostor.game.ui.theme.gameColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,11 +60,14 @@ fun SetupScreen(
     var showHintToImpostor by remember { mutableStateOf(true) }
     var selectedCategory by remember { mutableStateOf(initialCategory) }
     var categoryMenuOpen by remember { mutableStateOf(false) }
+    var pendingRemove by remember { mutableStateOf<String?>(null) }
 
-    val categories = getAllCategories()
+    val allCategoriesLabel = stringResource(R.string.setup_category_all)
+    val categories = listOf(allCategoriesLabel) + getAllCategories()
     val maxImpostors = (playerNames.size - 1).coerceAtLeast(1)
     val shownImpostors = impostorCount.coerceAtMost(maxImpostors)
     val canStartGame = playerNames.size >= 3 && shownImpostors < playerNames.size
+    val gameColors = MaterialTheme.gameColors
 
     Column(
         modifier = Modifier
@@ -67,13 +77,13 @@ fun SetupScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "El Impostor",
+            text = stringResource(R.string.setup_title),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
         )
         Text(
-            text = "Configura la partida",
+            text = stringResource(R.string.setup_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -81,7 +91,7 @@ fun SetupScreen(
 
         // --- Jugadores ---
         Text(
-            text = "Jugadores (${playerNames.size})",
+            text = stringResource(R.string.setup_players_section, playerNames.size),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.fillMaxWidth(),
@@ -91,8 +101,9 @@ fun SetupScreen(
             OutlinedTextField(
                 value = newName,
                 onValueChange = { if (it.length <= 20) newName = it },
-                placeholder = { Text("Nombre del jugador") },
+                placeholder = { Text(stringResource(R.string.setup_player_name_placeholder)) },
                 singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
             )
             Spacer(Modifier.width(8.dp))
@@ -105,8 +116,12 @@ fun SetupScreen(
                     }
                 },
                 enabled = newName.isNotBlank(),
+                modifier = Modifier.height(56.dp),
             ) {
-                Text("Añadir")
+                Text(
+                    text = stringResource(R.string.setup_add_player),
+                    style = MaterialTheme.typography.labelLarge,
+                )
             }
         }
 
@@ -123,11 +138,15 @@ fun SetupScreen(
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f),
                 )
-                IconButton(onClick = { playerNames = playerNames.filterIndexed { i, _ -> i != index }.toMutableList() }) {
+                IconButton(
+                    onClick = { pendingRemove = name },
+                    modifier = Modifier.size(48.dp),
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Eliminar a $name",
-                        tint = Color(0xFFF87171),
+                        contentDescription = stringResource(R.string.setup_remove_player_cd, name),
+                        tint = gameColors.impostor,
+                        modifier = Modifier.size(28.dp),
                     )
                 }
             }
@@ -135,16 +154,16 @@ fun SetupScreen(
 
         if (playerNames.size < 3) {
             Text(
-                text = "Necesitas al menos 3 jugadores",
+                text = stringResource(R.string.setup_min_players),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFFFBBF24),
+                color = gameColors.warn,
             )
         }
         Spacer(Modifier.height(20.dp))
 
         // --- Número de impostores ---
         Text(
-            text = "Número de impostores",
+            text = stringResource(R.string.setup_impostors_section),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.fillMaxWidth(),
@@ -158,25 +177,36 @@ fun SetupScreen(
             FilledTonalButton(
                 onClick = { impostorCount = (impostorCount - 1).coerceAtLeast(1) },
                 enabled = impostorCount > 1,
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                ),
+                modifier = Modifier.size(width = 64.dp, height = 56.dp),
             ) {
-                Text("−", style = MaterialTheme.typography.headlineSmall)
+                Text("−", style = MaterialTheme.typography.headlineMedium)
             }
             Text(
                 text = "$shownImpostors",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.width(56.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.width(64.dp),
+                textAlign = TextAlign.Center,
             )
             FilledTonalButton(
                 onClick = { impostorCount = (impostorCount + 1).coerceAtMost(maxImpostors) },
                 enabled = shownImpostors < maxImpostors,
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                ),
+                modifier = Modifier.size(width = 64.dp, height = 56.dp),
             ) {
-                Text("+", style = MaterialTheme.typography.headlineSmall)
+                Text("+", style = MaterialTheme.typography.headlineMedium)
             }
         }
         Text(
-            text = "Máximo: $maxImpostors (siempre menos que jugadores)",
+            text = stringResource(R.string.setup_impostors_max, maxImpostors),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -184,17 +214,19 @@ fun SetupScreen(
 
         // --- Pista para el impostor ---
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = "Pista para el impostor",
+                    text = stringResource(R.string.setup_hint_switch),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = if (showHintToImpostor) "El impostor verá una pista" else "Sin pista, más difícil",
+                    text = stringResource(if (showHintToImpostor) R.string.setup_hint_on else R.string.setup_hint_off),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -205,14 +237,13 @@ fun SetupScreen(
 
         // --- Categoría ---
         Text(
-            text = "Categoría de palabras",
+            text = stringResource(R.string.setup_category_section),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(8.dp))
-        // ExposedDropdownMenuBox: patrón oficial de M3. El toque en el campo abre el menú
-        // (el patrón anterior con Modifier.clickable no funcionaba: el TextField consume el gesto).
+        // ExposedDropdownMenuBox: patrón oficial de M3 (accesible con TalkBack).
         ExposedDropdownMenuBox(
             expanded = categoryMenuOpen,
             onExpandedChange = { categoryMenuOpen = it },
@@ -223,6 +254,7 @@ fun SetupScreen(
                 readOnly = true,
                 singleLine = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryMenuOpen) },
+                textStyle = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable),
@@ -233,7 +265,7 @@ fun SetupScreen(
             ) {
                 categories.forEach { category ->
                     DropdownMenuItem(
-                        text = { Text(category) },
+                        text = { Text(category, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
                             selectedCategory = category
                             categoryMenuOpen = false
@@ -243,10 +275,10 @@ fun SetupScreen(
             }
         }
         Text(
-            text = if (selectedCategory == "Todas") {
-                "Palabras de todas las categorías"
+            text = if (selectedCategory == allCategoriesLabel) {
+                stringResource(R.string.setup_category_all_hint)
             } else {
-                "Solo palabras de $selectedCategory"
+                stringResource(R.string.setup_category_only_hint, selectedCategory)
             },
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -261,28 +293,58 @@ fun SetupScreen(
                     GameConfig(
                         impostorCount = shownImpostors,
                         showHintToImpostor = showHintToImpostor,
-                        category = selectedCategory.takeIf { it != "Todas" },
+                        category = selectedCategory.takeIf { it != allCategoriesLabel },
                     ),
                 )
             },
             enabled = canStartGame,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(64.dp),
         ) {
             Text(
-                text = "Empezar Partida",
+                text = stringResource(R.string.setup_start),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
         }
         if (canStartGame) {
             Spacer(Modifier.height(8.dp))
+            val playersSummary = pluralStringResource(R.plurals.setup_summary_players, playerNames.size, playerNames.size)
+            val impostorsSummary = pluralStringResource(R.plurals.setup_summary_impostors, shownImpostors, shownImpostors)
             Text(
-                text = "${playerNames.size} jugadores, $shownImpostors impostor${if (shownImpostors > 1) "es" else ""}",
+                text = "$playersSummary, $impostorsSummary",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+
+    // Confirmación antes de eliminar un jugador (requisito de la fase 2).
+    pendingRemove?.let { name ->
+        AlertDialog(
+            onDismissRequest = { pendingRemove = null },
+            title = { Text(stringResource(R.string.setup_confirm_remove_title)) },
+            text = { Text(stringResource(R.string.setup_confirm_remove_text, name)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        playerNames = playerNames.filterNot { it == name }.toMutableList()
+                        pendingRemove = null
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.game_eliminate),
+                        color = gameColors.impostor,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingRemove = null }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
     }
 }
