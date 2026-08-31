@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.impostor.game.R
 import com.impostor.game.game.GameConfig
 import com.impostor.game.game.getAllCategories
+import com.impostor.game.ui.components.ThemeToggleButton
 import com.impostor.game.ui.theme.gameColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,12 +77,20 @@ fun SetupScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = stringResource(R.string.setup_title),
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+        // Barra superior: título + tema claro/oscuro (M-3)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.setup_title),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            ThemeToggleButton()
+        }
         Spacer(Modifier.height(20.dp))
 
         // --- Bloque: Configuración de la partida ---

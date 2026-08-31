@@ -32,6 +32,7 @@ import com.impostor.game.R
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
+import com.impostor.game.ui.components.ThemeToggleButton
 import com.impostor.game.ui.theme.gameColors
 
 @Composable
@@ -57,6 +58,16 @@ fun EndGameScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        // Barra superior: tema claro/oscuro (M-3)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ThemeToggleButton()
+        }
+        Spacer(Modifier.height(16.dp))
+
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = accentBg.copy(alpha = 0.45f),

@@ -39,6 +39,7 @@ import com.impostor.game.R
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
+import com.impostor.game.ui.components.ThemeToggleButton
 import com.impostor.game.ui.theme.gameColors
 import kotlinx.coroutines.delay
 
@@ -86,11 +87,14 @@ fun GameScreen(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
-            TextButton(onClick = { showAbandonDialog = true }, modifier = Modifier.height(48.dp)) {
-                Text(
-                    text = stringResource(R.string.action_leave),
-                    style = MaterialTheme.typography.titleSmall,
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextButton(onClick = { showAbandonDialog = true }, modifier = Modifier.height(48.dp)) {
+                    Text(
+                        text = stringResource(R.string.action_leave),
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                }
+                ThemeToggleButton()
             }
         }
         Text(
