@@ -57,7 +57,7 @@ fun SetupScreen(
     var playerNames by remember { mutableStateOf(initialPlayerNames.toMutableList()) }
     var newName by remember { mutableStateOf("") }
     var impostorCount by remember { mutableStateOf(1) }
-    var showHintToImpostor by remember { mutableStateOf(true) }
+    var showHintToImpostor by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf(initialCategory) }
     var categoryMenuOpen by remember { mutableStateOf(false) }
     var pendingRemove by remember { mutableStateOf<String?>(null) }
@@ -82,84 +82,67 @@ fun SetupScreen(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
         )
-        Text(
-            text = stringResource(R.string.setup_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
         Spacer(Modifier.height(20.dp))
 
-        // --- Jugadores ---
+        // --- Bloque: Configuración de la partida ---
         Text(
-            text = stringResource(R.string.setup_players_section, playerNames.size),
+            text = stringResource(R.string.setup_config_section),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(Modifier.height(12.dp))
+
+        // --- Categoría ---
+        Text(
+            text = stringResource(R.string.setup_category_section),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        // ExposedDropdownMenuBox: patrón oficial de M3 (accesible con TalkBack).
+        ExposedDropdownMenuBox(
+            expanded = categoryMenuOpen,
+            onExpandedChange = { categoryMenuOpen = it },
+        ) {
             OutlinedTextField(
-                value = newName,
-                onValueChange = { if (it.length <= 20) newName = it },
-                placeholder = { Text(stringResource(R.string.setup_player_name_placeholder)) },
+                value = selectedCategory,
+                onValueChange = {},
+                readOnly = true,
                 singleLine = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryMenuOpen) },
                 textStyle = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(Modifier.width(8.dp))
-            Button(
-                onClick = {
-                    val trimmed = newName.trim()
-                    if (trimmed.isNotEmpty() && trimmed !in playerNames) {
-                        playerNames = (playerNames + trimmed).toMutableList()
-                        newName = ""
-                    }
-                },
-                enabled = newName.isNotBlank(),
-                modifier = Modifier.height(56.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.setup_add_player),
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-        }
-
-        playerNames.forEachIndexed { index, name ->
-            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+            )
+            ExposedDropdownMenu(
+                expanded = categoryMenuOpen,
+                onDismissRequest = { categoryMenuOpen = false },
             ) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f),
-                )
-                IconButton(
-                    onClick = { pendingRemove = name },
-                    modifier = Modifier.size(48.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.setup_remove_player_cd, name),
-                        tint = gameColors.impostor,
-                        modifier = Modifier.size(28.dp),
+                categories.forEach { category ->
+                    DropdownMenuItem(
+                        text = { Text(category, style = MaterialTheme.typography.bodyLarge) },
+                        onClick = {
+                            selectedCategory = category
+                            categoryMenuOpen = false
+                        },
                     )
                 }
             }
         }
-
-        if (playerNames.size < 3) {
-            Text(
-                text = stringResource(R.string.setup_min_players),
-                style = MaterialTheme.typography.bodySmall,
-                color = gameColors.warn,
-            )
-        }
-        Spacer(Modifier.height(20.dp))
+        Text(
+            text = if (selectedCategory == allCategoriesLabel) {
+                stringResource(R.string.setup_category_all_hint)
+            } else {
+                stringResource(R.string.setup_category_only_hint, selectedCategory)
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(16.dp))
 
         // --- Número de impostores ---
         Text(
@@ -235,54 +218,6 @@ fun SetupScreen(
         }
         Spacer(Modifier.height(16.dp))
 
-        // --- Categoría ---
-        Text(
-            text = stringResource(R.string.setup_category_section),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(Modifier.height(8.dp))
-        // ExposedDropdownMenuBox: patrón oficial de M3 (accesible con TalkBack).
-        ExposedDropdownMenuBox(
-            expanded = categoryMenuOpen,
-            onExpandedChange = { categoryMenuOpen = it },
-        ) {
-            OutlinedTextField(
-                value = selectedCategory,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryMenuOpen) },
-                textStyle = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable),
-            )
-            ExposedDropdownMenu(
-                expanded = categoryMenuOpen,
-                onDismissRequest = { categoryMenuOpen = false },
-            ) {
-                categories.forEach { category ->
-                    DropdownMenuItem(
-                        text = { Text(category, style = MaterialTheme.typography.bodyLarge) },
-                        onClick = {
-                            selectedCategory = category
-                            categoryMenuOpen = false
-                        },
-                    )
-                }
-            }
-        }
-        Text(
-            text = if (selectedCategory == allCategoriesLabel) {
-                stringResource(R.string.setup_category_all_hint)
-            } else {
-                stringResource(R.string.setup_category_only_hint, selectedCategory)
-            },
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
         Spacer(Modifier.height(28.dp))
 
         // --- Empezar ---
@@ -316,6 +251,88 @@ fun SetupScreen(
                 text = "$playersSummary, $impostorsSummary",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Spacer(Modifier.height(20.dp))
+
+        // --- Bloque: Añadir jugadores ---
+        Text(
+            text = stringResource(R.string.setup_add_players_section),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = newName,
+                onValueChange = { if (it.length <= 20) newName = it },
+                placeholder = { Text(stringResource(R.string.setup_player_name_placeholder)) },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    val trimmed = newName.trim()
+                    if (trimmed.isNotEmpty() && trimmed !in playerNames) {
+                        playerNames = (playerNames + trimmed).toMutableList()
+                        newName = ""
+                    }
+                },
+                enabled = newName.isNotBlank(),
+                modifier = Modifier.height(56.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.setup_add_player),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+            text = stringResource(R.string.setup_players_section, playerNames.size),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(Modifier.height(8.dp))
+
+        playerNames.forEachIndexed { index, name ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(
+                    onClick = { pendingRemove = name },
+                    modifier = Modifier.size(48.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.setup_remove_player_cd, name),
+                        tint = gameColors.impostor,
+                        modifier = Modifier.size(28.dp),
+                    )
+                }
+            }
+        }
+
+        if (playerNames.size < 3) {
+            Text(
+                text = stringResource(R.string.setup_min_players),
+                style = MaterialTheme.typography.bodySmall,
+                color = gameColors.warn,
             )
         }
     }

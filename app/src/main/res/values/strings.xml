@@ -21,7 +21,8 @@
 
     <!-- Setup -->
     <string name="setup_title">El Impostor</string>
-    <string name="setup_subtitle">Configura la partida</string>
+    <string name="setup_config_section">Configuración de la partida</string>
+    <string name="setup_add_players_section">Añadir jugadores</string>
     <string name="setup_players_section">Jugadores (%1$d)</string>
     <string name="setup_player_name_placeholder">Nombre del jugador</string>
     <string name="setup_add_player">Añadir</string>
