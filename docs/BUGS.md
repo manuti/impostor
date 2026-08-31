@@ -1,7 +1,8 @@
-# Bugs conocidos — v0.3.0 (fase 2)
+# Bugs conocidos (fases 2 y 2.5)
 
 > Registro abierto el **2026-08-26** tras la primera prueba en dispositivo del usuario.
 > Correcciones previstas: **2026-08-27**. Mientras tanto **no publicar el APK v0.3.0 como release**.
+> Fase 2 cerrada. Registro continúa en fase 2.5 (v0.3.x): BUG-5 (2026-08-31).
 
 ## BUG-1 — CRÍTICO: fuga visual del rol al pasar de jugador (animación del naipe)
 
@@ -36,6 +37,14 @@
 - **Fix aplicado (2026-08-28, junto con BUG-3)**: el ojo se dibuja con dos colores por tema en `GameColors` (`eye` + `eyePupil`): en oscuro, ojo claro con pupila índigo; en claro, ojo índigo con pupila ámbar (marca de la app). Contraste AA en ambos temas.
 - **Estado**: 🔄 corregido en código — pendiente de verificar en dispositivo (APK nuevo en Descargas).
 
+## BUG-5 — El pie "Pasa el móvil" repetía el nombre del jugador activo en vez del siguiente (M-2, v0.3.3)
+
+- **Severidad**: media (confunde la mecánica de paso del móvil).
+- **Síntoma**: en la revelación de rol, el pie decía "Pasa el móvil a NOMBRE" con el nombre del jugador **activo** (el que acaba de ver su rol, repetido de la píldora), cuando debe indicar a **quién** hay que pasarle el móvil (el siguiente jugador).
+- **Causa (diagnóstico en código)**: M-2 usó `currentPlayer.name` en el pie.
+- **Fix aplicado (2026-08-31)**: el pie usa `players[currentPlayerIndex + 1].name` (el siguiente jugador); para el último jugador no se muestra, porque no hay a quién pasarle el móvil (el botón pasa a ser "Empezar Partida") — esto también corrige el defecto latente de la fase 2, que mostraba el texto genérico también en el último jugador.
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-08-31)**.
+
 ## Resumen
 
 | Bug | Severidad | Estado |
@@ -44,3 +53,4 @@
 | BUG-2 · stepper de impostores en oscuro | Media | ✅ corregido y verificado (2026-08-28) |
 | BUG-3 · ojo del naipe pequeño | Baja | ✅ corregido y verificado (2026-08-28) |
 | BUG-4 · pupila en tema claro | Baja | ✅ corregido y verificado (2026-08-28) |
+| BUG-5 · pie repite el nombre del jugador activo | Media | ✅ corregido y verificado (2026-08-31) |

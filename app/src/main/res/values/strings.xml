@@ -62,7 +62,7 @@
     <string name="role_must_view">Por favor, mira tu rol antes de continuar</string>
     <string name="role_seen_title">HAS VISTO TU ROL</string>
     <string name="role_seen_sub">Puedes continuar</string>
-    <string name="role_pass_phone">Pasa el móvil al siguiente jugador</string>
+    <string name="role_pass_phone">Pasa el móvil a %1$s</string>
     <string name="role_card_locked_cd">Naipe cerrado. Toca para ver tu rol</string>
     <string name="role_card_revealed_cd">Naipe abierto con tu rol</string>
     <string name="role_exit_title">Salir de la partida</string>

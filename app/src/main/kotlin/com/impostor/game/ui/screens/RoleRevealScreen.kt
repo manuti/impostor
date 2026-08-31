@@ -3,6 +3,7 @@ package com.impostor.game.ui.screens
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -143,12 +145,22 @@ fun RoleRevealScreen(
         }
         Spacer(Modifier.height(14.dp))
 
-        Text(
-            text = currentPlayer.name,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+        // Píldora destacada con el nombre del jugador activo (M-2)
+        Surface(
+            shape = RoundedCornerShape(50),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = currentPlayer.name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            )
+        }
         Spacer(Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.role_your_role),
@@ -310,12 +322,17 @@ fun RoleRevealScreen(
 
         if (revealed) {
             Spacer(Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.role_pass_phone),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
+            // M-2: el pie indica a quién pasar el móvil (el siguiente jugador);
+            // el último no tiene a quién pasarlo (el botón pasa a ser Empezar Partida).
+            val nextPlayerIndex = currentPlayerIndex + 1
+            if (nextPlayerIndex < players.size) {
+                Text(
+                    text = stringResource(R.string.role_pass_phone, players[nextPlayerIndex].name),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
+            }
         } else {
             Spacer(Modifier.height(24.dp))
         }
