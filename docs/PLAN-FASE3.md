@@ -47,6 +47,7 @@ Hacer la app multidioma: español (es-419, default) + inglés como primer idioma
 5. **No meter gramática española en la lógica**: las frases completas viven en recursos; la lógica solo combina datos.
 6. **Contenido del juego separado de la UI**: palabras/categorías siguen en su propio modelo de datos (ya están en `GameWords.kt`), no acoplarlas a cadenas de UI ni a lógica de pantalla.
 7. No añadir dependencias de texto/formato que asuman español (p. ej. no formatear listas uniendo con ", " en código; usar recursos).
+8. **Ortografía es-419 correcta en cadenas y documentación**: usar siempre "píldora" (con tilde), nunca "pillula" (acordado 2026-09-02 tras corregirlo en la v0.3.3). Revisar tilde y grafía de cualquier término nuevo.
 
 ## 5. Decisiones pendientes para la fase 3 [DECISIÓN]
 

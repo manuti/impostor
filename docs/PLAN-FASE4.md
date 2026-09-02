@@ -44,7 +44,7 @@
 - [ ] **Manifest/permisos**: mantener **cero permisos** (estado actual). Si se añade alguno, justificarlo en la ficha (declaración de permisos de Play).
 - [ ] **targetSdk 36** (ya configurado) — comprobar el requisito mínimo vigente de Play en el momento de publicar.
 - [ ] **App Bundle (AAB)** para producción (`bundleRelease`), no APK; firmado con keystore de release (crear y custodiar; no versionar).
-- [ ] **Icono adaptable** y recursos de ficha: capturas de pantalla (mín. 2 teléfono), gráfica destacada, título y descripciones corta/larga en es-419.
+- [ ] **Icono adaptable** y recursos de ficha: capturas de pantalla (mín. 2 teléfono), gráfica destacada, título y descripciones corta/larga en es-419 (mismas reglas de estilo que la app: ortografía correcta, p. ej. **píldora**, no *pillula*).
 - [ ] **Clasificación de contenido** (cuestionario IARC) y confirmación de políticas (contenido, spam, datos).
 - [ ] **Política de privacidad**: la app no recoge datos (todo local). Publicar URL de política aunque no haya recogida, según los requisitos vigentes.
 - [ ] **Testing**: subir primero a *internal testing* con la lista de probadores; validar instalación desde Play (firma distinta a la de debug).
