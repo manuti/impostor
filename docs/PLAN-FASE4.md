@@ -53,8 +53,18 @@
 - [ ] **Versionado de publicación**: mantener `versionCode` creciente; el `versionName` de Play puede seguir `v0.4.x` o saltar a `1.0.0` (decisión de la fase 4).
 - [ ] **Telemetrydeck** (solo si se decide): integrar como componente aislado, con consentimiento y su declaración en la política de privacidad.
 
-## 6. Trabajo pendiente del plan original de la fase 4 (a detallar)
+## 6. Cambios de la fase 4 (antes de publicar en Play) — a detallar
 
+Orden previsto; **el primero en implementarse**:
+
+### C-1 · No repetir la palabra secreta entre partidas consecutivas (primer cambio)
+
+- **Qué**: al empezar una partida nueva, evitar que la palabra secreta coincida con la de la partida anterior. Hoy `getRandomWord` usa `pool.random()` sin memoria (`GameWords.kt`): con una categoría de 10 palabras, repetir la anterior tiene 1/10 de probabilidad; en varias partidas seguidas es muy probable.
+- **Cómo**: recordar la última palabra elegida y excluirla del pool en la siguiente selección (si el pool tiene más de 1 palabra; si solo queda 1, permitir repetir). Basta en memoria por sesión (`App.kt`, en `startGame`); opcional: persistirla en SharedPreferences para que sobreviva al cierre de la app.
+- **Toca**: `game/GameWords.kt` (nueva función de selección con exclusión o parámetro) y `ui/App.kt` (pasar/excluir la última palabra). No cambia la mecánica de juego ni añade dependencias.
+- **Verificación**: jugar dos partidas seguidas con la misma categoría → la palabra no se repite; pool de 1 palabra → permite repetir; sin regresión en el flujo normal.
+
+Y el resto del trabajo previsto (a detallar al llegar):
 - Animación de inicio / splash.
 - Evaluación de telemetrydeck (decisión explícita pendiente).
 - Revisión final de accesibilidad (TalkBack) en la ficha y en la app.
