@@ -2,7 +2,7 @@
 
 Juego de deducción social **nativo para Android** (Kotlin + Jetpack Compose) en el que todos los jugadores conocen una palabra secreta excepto uno: **el impostor**, que debe fingir y adivinar la palabra sin ser descubierto.
 
-Versión actual: **v0.3.0** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores).
+Versión actual: **v0.3.4** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores y mejoras intermedias de la fase 2.5).
 
 ## Cómo se juega
 
@@ -12,16 +12,19 @@ Versión actual: **v0.3.0** (modo local *pass & play*, un solo dispositivo que s
 4. **Votación**: todos votan quién creen que es el impostor.
 5. **Victoria**: los civiles ganan si eliminan a todos los impostores; los impostores ganan si igualan o superan en número a los civiles.
 
-> Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md). El plan de la fase 2, en [`docs/PLAN-FASE2.md`](docs/PLAN-FASE2.md).
+> Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md). Planes: [`docs/PLAN-FASE2.md`](docs/PLAN-FASE2.md) (usabilidad), [`docs/PLAN-FASE2.5.md`](docs/PLAN-FASE2.5.md) (mejoras intermedias), [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md) (i18n) y [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md) (publicación en Google Play).
 
-## Características actuales (v0.3.0)
+## Características actuales (v0.3.4)
 
 - Modo local **pass & play** (un solo dispositivo).
 - **110 palabras propias** en 11 categorías (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas).
 - 1–N impostores configurables; pista opcional para el impostor.
 - Selector de categorías accesible (patrón `ExposedDropdownMenuBox`, v0.2.0).
 - **Revelación de roles con animación de naipe**: el rol se muestra al girar el naipe (tap); anverso con el logo del ojo, reverso con la palabra o la pista.
-- **Tema oscuro y claro** con botón **sol/luna** en la parte superior; la preferencia se recuerda.
+- **Configuración reordenada** (v0.3.1): Título → Configuración de la partida (Categoría → Impostores → Pista) → Empezar Partida → Añadir jugadores; la **pista del impostor sale desactivada** por defecto.
+- **Tema oscuro y claro** con botón **sol/luna** en la barra superior de **todas** las pantallas (v0.3.2); la preferencia se recuerda.
+- **Jugador activo destacado** en la revelación (v0.3.3): píldora de contraste con su nombre y pie "Pasa el móvil a [siguiente jugador]".
+- **Carta oculta al mover el dispositivo** (v0.3.4): si el móvil se agita o se gira para pasarlo a otra persona con el rol revelado, la carta se oculta al instante y se conserva el mismo turno (acelerómetro + giroscopio, sin permisos en el manifest).
 - **Texto grande y de alto contraste** (WCAG AA), objetivos táctiles grandes y colores **aptos para daltonismo** (el color nunca es el único canal: siempre con icono + texto + forma).
 - **Primer participante justo**: sin pistas, nunca empieza el impostor (quien no sabe nada); con pistas, puede empezar cualquiera.
 - Confirmaciones antes de acciones destructivas (salir de la partida, eliminar jugador, votación).
@@ -30,9 +33,9 @@ Versión actual: **v0.3.0** (modo local *pass & play*, un solo dispositivo que s
 - Recuerda jugadores y categoría de la última partida.
 - Todas las cadenas de la UI en `res/values/strings.xml` (listo para internacionalizar).
 
-## Bugs corregidos (v0.3.0)
+## Bugs corregidos
 
-La primera prueba en dispositivo (2026-08-26) detectó 4 bugs; **todos corregidos y verificados el 2026-08-28** (incluido el crítico de fuga visual del rol en la animación del naipe). Registro completo en [`docs/BUGS.md`](docs/BUGS.md).
+La primera prueba en dispositivo (2026-08-26) detectó 4 bugs de la fase 2, **todos corregidos y verificados el 2026-08-28** (incluido el crítico de fuga visual del rol en la animación del naipe). La fase 2.5 añadió BUG-5 (pie que repetía al jugador activo) y BUG-6 (crash por `SENSOR_DELAY_FASTEST` sin permiso), ambos corregidos y verificados. Registro completo en [`docs/BUGS.md`](docs/BUGS.md).
 
 ## Stack
 
@@ -71,13 +74,15 @@ app/src/main/kotlin/com/impostor/game/
 ├── MainActivity.kt          # Entrada de la app
 ├── ui/App.kt                # Máquina de estados (setup → roleReveal → playing → ended) + tema persistido
 ├── ui/screens/              # SetupScreen, RoleRevealScreen, GameScreen, EndGameScreen
-├── ui/components/           # Componentes compartidos (ThemeToggle sol/luna)
+├── ui/components/           # Componentes compartidos (ThemeToggle sol/luna, MotionDetector)
 ├── ui/theme/                # Tema oscuro/claro Material 3 + colores semánticos del juego
 └── game/                    # Modelos y lista de palabras (GameModels.kt, GameWords.kt)
 app/src/main/res/values/strings.xml   # Todas las cadenas de la UI (es-419)
 docs/investigacion.md        # Investigación previa (reglas, referencias, comparativa)
 docs/PLAN-FASE2.md           # Plan de usabilidad (v0.3.0) y decisiones de diseño
+docs/PLAN-FASE2.5.md         # Plan de mejoras intermedias (v0.3.1–v0.3.4)
 docs/PLAN-FASE3.md           # Plan futuro de i18n (v0.4.0) con reglas vinculantes
+docs/PLAN-FASE4.md           # Plan de publicación en Google Play (lecciones + checklist)
 gradle/libs.versions.toml    # Version catalog
 referencias/                 # Clon local de la referencia React (no se sube)
 ```
@@ -87,9 +92,9 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] v0.1.0 — MVP local funcional (pass & play)
 - [x] v0.2.0 — Selector de categorías corregido (ExposedDropdownMenuBox)
 - [x] **v0.3.0 — Fase 2: usabilidad para personas mayores** (naipe giratorio, tema claro/oscuro, texto grande, contraste AA, daltonismo, confirmaciones, primer participante justo)
-- [ ] **Fase 2.5 — Mejoras intermedias** (v0.3.x; plan y lista de mejoras en `docs/PLAN-FASE2.5.md`)
+- [x] **v0.3.1–v0.3.4 — Fase 2.5: mejoras intermedias** (configuración reordenada con pista off por defecto, toggle de tema en todas las pantallas, jugador activo destacado, carta oculta al mover el dispositivo)
 - [ ] Fase 3 — Internacionalización (i18n): plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
-- [ ] Fase 4 — Publicación en Google Play (animación de inicio, telemetrydeck, requisitos de la tienda); plan a actualizar según el cierre de fases 2 y 2.5
+- [ ] Fase 4 — Publicación en Google Play: punto de partida y checklist en [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md)
 
 ## Agradecimientos
 

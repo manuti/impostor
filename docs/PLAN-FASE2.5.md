@@ -1,7 +1,7 @@
 # Contexto y plan — Fase 2.5: mejoras intermedias (v0.3.x)
 
 > Documento de arranque de sesión. **Léelo completo antes de tocar código.**
-> Creado: 2026-08-28 · Actualizado: 2026-08-28 (decisión M-1: opción A) · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
+> Creado: 2026-08-28 · Actualizado: 2026-09-02 (fase **cerrada**: v0.3.1–v0.3.4 publicadas) · Proyecto: El Impostor (Android nativo) · Repo: https://github.com/manuti/impostor
 
 ---
 
@@ -9,7 +9,7 @@
 
 Fase intermedia entre la **fase 2** (usabilidad, v0.3.0 **cerrada y publicada**) y la **fase 3** (i18n). Recoge 4 mejoras detectadas tras el uso real, planificadas para que **no compliquen la fase 3 (i18n)** ni la **fase 4 (publicación en Google Play)**.
 
-- **Estado del plan**: aprobado. Decisión pendiente de M-1 resuelta (opción A). **Sin implementación iniciada.**
+- **Estado del plan**: ✅ **cerrado el 2026-09-02** — M-4 (v0.3.1), M-3 (v0.3.2), M-2 (v0.3.3) y M-1 (v0.3.4) implementadas, probadas en dispositivo y publicadas. Cierre de fase: README y PLAN-FASE4 actualizados (lecciones + checklist de Play Store).
 - Versionado: cada mejora (o grupo) → **v0.3.1, v0.3.2, …** (incremento de patch + `versionCode` +1 por release).
 
 ## 2. Estado actual del proyecto (v0.3.0)
@@ -79,32 +79,34 @@ Notas clave:
 
 ## 7. Mejoras a implementar
 
-### M-4 · Reordenar la configuración de la partida (`SetupScreen.kt`) — v0.3.1
+### M-4 · Reordenar la configuración de la partida (`SetupScreen.kt`) — v0.3.1 ✅
 
 - Nuevo orden: **Título** → **bloque "Configuración de la partida"** (nº impostores, pista, categoría) → **Empezar partida** → **bloque "Añadir jugadores"** (campo + lista con ✕).
 - **Pista del impostor DESACTIVADA por defecto**: cambiar el estado inicial del switch a `false` (hoy `true`).
 - Strings nuevos (etiquetas de bloque) → `strings.xml`.
 - Verificación: configurar una partida siguiendo el nuevo orden; pista apagada por defecto.
+- **Nota de implementación (2026-08-31)**: por petición del usuario, el orden interno del bloque de configuración quedó **Categoría de palabras → Nº de impostores → Pista** (categoría primero). El subtítulo `setup_subtitle` se eliminó (redundante con la cabecera de bloque). Publicada como v0.3.1.
 
-### M-3 · Toggle claro/oscuro en todas las pantallas — v0.3.2
+### M-3 · Toggle claro/oscuro en todas las pantallas — v0.3.2 ✅
 
 - `ThemeToggleButton` (ya existe) se coloca en la barra superior de `SetupScreen`, `GameScreen` y `EndGameScreen` (RoleRevealScreen ya lo tiene).
 - `contentDescription` ya está en `strings.xml`.
 - Verificación: alternar tema desde cada pantalla; preferencia persistida.
 
-### M-2 · Reforzar el nombre del jugador activo en la revelación (`RoleRevealScreen.kt`) — v0.3.3
+### M-2 · Reforzar el nombre del jugador activo en la revelación (`RoleRevealScreen.kt`) — v0.3.3 ✅
 
 - El nombre del jugador pasa a una **tarjeta/píldora destacada** (fondo de contraste, tamaño grande).
 - Repetir el nombre en el pie: "Pasa el móvil a **NOMBRE**" (placeholder en `strings.xml`).
 - Verificación: al pasar de jugador, el nombre activo es evidente en toda la pantalla.
 
-### M-1 · Ocultar la carta al detectar movimiento brusco tras revelar (`RoleRevealScreen.kt`) — v0.3.4
+### M-1 · Ocultar la carta al detectar movimiento brusco tras revelar (`RoleRevealScreen.kt`) — v0.3.4 ✅
 
 - Sensor de movimiento: `SensorManager` + `TYPE_LINEAR_ACCELERATION` en `RoleRevealScreen`, registro/desregistro con `DisposableEffect`, **activo solo cuando la carta está revelada**.
 - Umbral de sacudida calibrado (evitar falsos positivos al tocar).
 - Al detectarse: la carta vuelve al anverso **sin animación** (patrón BUG-1) y se muestra un aviso breve ("Carta oculta. Pulsa Siguiente o pasa el móvil" → `strings.xml`). **Se conserva el mismo jugador** (decisión §6).
 - Componente de sensor aislado y reutilizable (regla §5.2).
 - Verificación: revelar → mover el móvil bruscamente → la carta se oculta y el turno sigue siendo el mismo; mover el móvil SIN revelar no hace nada; tocar la carta no dispara el sensor.
+- **Notas de implementación (2026-09-02)**: el componente es `MotionDetector` (`ui/components/MotionDetector.kt`) con **acelerómetro lineal (3 m/s²) + giroscopio (2 rad/s)** — el giro de pasar el móvil entre jugadores no lo ve el acelerómetro solo (calibrado en dispositivo). Usa `SENSOR_DELAY_GAME`: `SENSOR_DELAY_FASTEST` (0 µs) exige el permiso `HIGH_SAMPLING_RATE_SENSORS` desde API 31 y crasheaba sin él (BUG-6). Un listener por sensor, sin tocar `event.sensor`. Sin permisos nuevos en el manifest.
 
 ## 8. Cierre por mejora y de fase
 
