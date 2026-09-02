@@ -59,3 +59,18 @@
 - Evaluación de telemetrydeck (decisión explícita pendiente).
 - Revisión final de accesibilidad (TalkBack) en la ficha y en la app.
 - Preparación de materiales de la ficha de Play (textos, capturas, icono).
+
+## 7. Post-publicación — mejoras futuras propuestas
+
+> Añadido 2026-09-02 por el usuario. NO implementar en la fase 4: son candidatas a una fase posterior a la publicación en Google Play. Al arrancar cualquiera, moverla a su propio plan con detalle.
+
+### T-1 · Revelado de rol por audio al acercar el móvil al oído
+
+- **Qué**: alternativa (o complemento) auditiva al revelado visual: el jugador acerca el teléfono a la oreja y el TTS le dice su rol en privado — "NOMBRE, tu palabra es X" (civil) o "NOMBRE, eres impostor" (+ su pista si está activada).
+- **Por qué**: permite jugar sin mirar la pantalla; beneficia a personas con dificultad visual (misma audiencia que la fase 2) y a quien prefiera no leer.
+- **Detección de "acercar a la oreja"**: sensor de proximidad (`TYPE_PROXIMITY`) — componente aislado y reutilizable con `DisposableEffect`, sin lógica de negocio, siguiendo el precedente de `MotionDetector` (M-1, v0.3.4). Sin permisos nuevos (la proximidad no requiere permiso).
+- **Audio**: `TextToSpeech` del sistema. Probar en dispositivo que la voz sale por el **auricular/earpiece** (o a volumen bajo) para que solo la oiga el jugador; silenciar al retirar el móvil de la oreja.
+- **⚠️ Cambio de decisión previa**: las reglas de TTS de PLAN-FASE3 §6 y CONTEXTO-FASE2 §6.6 descartan leer palabra/pista "nunca sobre contenido secreto". Esta tarea lo revierte **solo en el modo privado** (móvil al oído). Al implementarla: actualizar esos documentos y fijar la condición (proximidad activa) como única vía de lectura del secreto.
+- **i18n (fase 3)**: la voz sigue el locale; la lectura usa cadenas traducidas con placeholders (p. ej. "%1$s, tu palabra es %2$s").
+- **Verificación futura en dispositivo**: al acercar el móvil a la oreja con la carta revelada se oye el rol; al retirarlo se silencia; los demás jugadores no oyen nada; el revelado visual actual no cambia.
+- **Dependencias**: fase 3 (i18n) cerrada, para que la voz y las cadenas estén localizadas.
