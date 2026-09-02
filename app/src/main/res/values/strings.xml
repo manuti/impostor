@@ -65,6 +65,7 @@
     <string name="role_pass_phone">Pasa el móvil a %1$s</string>
     <string name="role_card_locked_cd">Naipe cerrado. Toca para ver tu rol</string>
     <string name="role_card_revealed_cd">Naipe abierto con tu rol</string>
+    <string name="role_card_hidden">Carta oculta. Pulsa Siguiente o pasa el móvil</string>
     <string name="role_exit_title">Salir de la partida</string>
     <string name="role_exit_text">¿Seguro que quieres salir de la partida?</string>
 

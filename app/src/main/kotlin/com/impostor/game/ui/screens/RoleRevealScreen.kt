@@ -52,6 +52,7 @@ import com.impostor.game.game.GameConfig
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
+import com.impostor.game.ui.components.MotionDetector
 import com.impostor.game.ui.components.ThemeToggleButton
 import com.impostor.game.ui.theme.gameColors
 import kotlinx.coroutines.launch
@@ -76,6 +77,7 @@ fun RoleRevealScreen(
     val gameColors = MaterialTheme.gameColors
 
     var revealed by remember(currentPlayerIndex) { mutableStateOf(false) }
+    var cardHiddenByShake by remember(currentPlayerIndex) { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
     var showHelpDialog by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
@@ -85,6 +87,19 @@ fun RoleRevealScreen(
     // del siguiente jugador NUNCA llega a componerse en la transición.
     val rotation = remember(currentPlayerIndex) { Animatable(0f) }
     val scope = rememberCoroutineScope()
+
+    // M-1 (decisión opción A): sensor de movimiento activo solo con la carta
+    // revelada. Al detectar movimiento (sacudida o giro de paso entre jugadores),
+    // la carta vuelve al anverso SIN animación (patrón BUG-1) y se conserva el
+    // mismo jugador.
+    MotionDetector(
+        enabled = revealed,
+        onMotion = {
+            cardHiddenByShake = true
+            revealed = false
+            scope.launch { rotation.snapTo(0f) }
+        },
+    )
 
     val isImpostor = currentPlayer.role == Role.IMPOSTOR
     val roleHeader = stringResource(if (isImpostor) R.string.role_impostor else R.string.role_your_word)
@@ -293,6 +308,13 @@ fun RoleRevealScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        } else if (cardHiddenByShake) {
+            Text(
+                text = stringResource(R.string.role_card_hidden),
+                style = MaterialTheme.typography.bodyMedium,
+                color = gameColors.warn,
+                textAlign = TextAlign.Center,
+            )
         } else {
             Text(
                 text = stringResource(R.string.role_must_view),
@@ -308,7 +330,7 @@ fun RoleRevealScreen(
             onClick = {
                 if (isLastPlayer) onAllPlayersSawRoles() else onPlayerSawRole(currentPlayerIndex)
             },
-            enabled = revealed,
+            enabled = revealed || cardHiddenByShake,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp),

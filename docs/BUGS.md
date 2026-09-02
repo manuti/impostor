@@ -2,7 +2,7 @@
 
 > Registro abierto el **2026-08-26** tras la primera prueba en dispositivo del usuario.
 > Correcciones previstas: **2026-08-27**. Mientras tanto **no publicar el APK v0.3.0 como release**.
-> Fase 2 cerrada. Registro continúa en fase 2.5 (v0.3.x): BUG-5 (2026-08-31).
+> Fase 2 cerrada. Registro continúa en fase 2.5 (v0.3.x): BUG-5 (2026-08-31), BUG-6 (2026-09-02).
 
 ## BUG-1 — CRÍTICO: fuga visual del rol al pasar de jugador (animación del naipe)
 
@@ -45,6 +45,15 @@
 - **Fix aplicado (2026-08-31)**: el pie usa `players[currentPlayerIndex + 1].name` (el siguiente jugador); para el último jugador no se muestra, porque no hay a quién pasarle el móvil (el botón pasa a ser "Empezar Partida") — esto también corrige el defecto latente de la fase 2, que mostraba el texto genérico también en el último jugador.
 - **Estado**: ✅ **corregido y verificado en dispositivo (2026-08-31)**.
 
+## BUG-6 — CRÍTICO: cuelgue al revelar el naipe por SENSOR_DELAY_FASTEST sin permiso (M-1, v0.3.4)
+
+- **Severidad**: crítica (crash al activar el sensor de movimiento).
+- **Síntoma**: al empezar la partida y revelar la carta (momento en que el sensor se registra), la app crasheaba.
+- **Causa raíz (stacktrace en dispositivo)**: `java.lang.SecurityException: To use the sampling rate of 0 microseconds, app needs to declare the normal permission HIGH_SAMPLING_RATE_SENSORS` — `SENSOR_DELAY_FASTEST` pide 0 µs y, desde Android 12 (API 31), exige declarar ese permiso en el manifest.
+- **Fix aplicado (2026-09-02)**: `SENSOR_DELAY_GAME` (~50 Hz), sin permiso nuevo en el manifest (mejor para la fase 4). Suficiente: la ventana de 3 muestras ≈ 60 ms y el gesto de paso dura cientos de ms. Además se dejó un listener por sensor sin acceder a `event.sensor` (evita NPE si llegan eventos en cola tras el unregister).
+- **Calibración del umbral (misma fecha)**: acelerómetro lineal 3 m/s² + giroscopio 2 rad/s (el giro de pasar el móvil entre jugadores no lo ve el acelerómetro solo).
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-09-02)**.
+
 ## Resumen
 
 | Bug | Severidad | Estado |
@@ -54,3 +63,4 @@
 | BUG-3 · ojo del naipe pequeño | Baja | ✅ corregido y verificado (2026-08-28) |
 | BUG-4 · pupila en tema claro | Baja | ✅ corregido y verificado (2026-08-28) |
 | BUG-5 · pie repite el nombre del jugador activo | Media | ✅ corregido y verificado (2026-08-31) |
+| BUG-6 · crash por SENSOR_DELAY_FASTEST sin permiso | Crítica | ✅ corregido y verificado (2026-09-02) |
