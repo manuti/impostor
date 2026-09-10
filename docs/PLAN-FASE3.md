@@ -22,7 +22,7 @@ Además, y **antes** de la i18n, esta fase incluye una mejora de juego independi
 - `res/values/strings.xml` (default, es-419): **82 `<string>` + 2 grupos `<plurals>`** (`setup_summary_players`, `setup_summary_impostors`), todos con placeholders `%1$s`/`%1$d`; sin concatenación de texto ni pluralización manual en las pantallas.
 - **UI 100 % externalizada**: la UI usa `stringResource(R.string.x)` en SetupScreen (22 usos), RoleReveal (27), GameScreen (27), EndGameScreen (8), App (2) y ThemeToggle (3). **No quedan cadenas de UI en español hardcodeadas en Kotlin**.
 - Restos NO traducibles (glifos/números/claves): `Text("−")`/`Text("+")` (SetupScreen), conteos numéricos, emojis, prefijos decorativos `"✔ "`/`"• "`, claves de prefs (`impostor_prefs`, `dark_theme`). Un único patrón a pulir en la fase 3 (regla 7): el join `"$playersSummary, $impostorsSummary"` (SetupScreen.kt:260) → recurso con dos placeholders `%1$s, %2$s`.
-- **Contenido del juego**: `game/GameWords.kt` con **110 `WordPair`** (palabra + pista, en español) en **11 categorías** (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas) + la pseudo-categoría `"Todas"`. Separado de la UI; **sin localizar** (D-F3-1).
+- **Contenido del juego**: `game/GameWords.kt` con **110 `WordPair`** (palabra + pista, en español) en **11 categorías** (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas) + la pseudo-categoría `"Todas"`. Separado de la UI; **sin localizar** hoy (D-F3-1: **decidido traducir todo**, UI y contenido).
 - **Idioma**: no hay `values-en/` ni ningún otro locale; no hay código `Locale` ni selector in-app — hoy la app solo existe en español (D-F3-2).
 - **RTL**: sin pines de direccionalidad en el manifest ni `left/right` en Kotlin; la fase 2 ya usó `start/end`. Nada verificado en árabe/hebreo (D-F3-4).
 - Versión actual: **0.3.4** (`versionCode = 7`); releases publicados v0.1.0…v0.3.4.
@@ -38,14 +38,14 @@ Además, y **antes** de la i18n, esta fase incluye una mejora de juego independi
 - **Cómo**: recordar la última palabra elegida y excluirla del pool en la siguiente selección (si el pool tiene más de 1 palabra; si solo queda 1, permitir repetir). Basta en memoria por sesión (`App.kt`, en `startGame`); opcional: persistirla en SharedPreferences para que sobreviva al cierre de la app.
 - **Toca**: `game/GameWords.kt` (nueva función de selección con exclusión o parámetro) y `ui/App.kt` (pasar/excluir la última palabra). No cambia la mecánica de juego ni añade dependencias.
 - **Verificación**: jugar dos partidas seguidas con la misma categoría → la palabra no se repite; pool de 1 palabra → permite repetir; sin regresión en el flujo normal.
-- **Release**: [DECISIÓN D-F3-5] publicar C-1 como patch propio **v0.3.5** (patrón de la fase 2.5: cada mejora con su release tras la prueba en dispositivo) o acumularlo hasta el cierre **v0.4.0** de la i18n.
+- **Release**: **decidido (2026-09-10): patch propio v0.3.5** (`versionCode` 7 → 8), con su release tras la prueba en dispositivo y **antes** de empezar la i18n (patrón de la fase 2.5).
 
 Y después, el trabajo de i18n propiamente dicho:
 
 1. Completar la externalización de cualquier cadena que quede (la fase 2 debe dejarlo casi hecho).
 2. Crear `values-en/` (y los locales acordados) con las traducciones.
 3. **[DECISIÓN]** Idioma: seguir el del sistema vs selector de idioma dentro de la app (para un juego pass & play que se presta, un selector in-app puede ser más cómodo; decidir).
-4. Traducir el **contenido**: categorías y palabras por locale (estructura de datos localizada, no cadenas de UI).
+4. Traducir el **contenido** (D-F3-1 decidido: **todo**): palabras, pistas y categorías por locale (estructura de datos localizada, no cadenas de UI). **Consecuencia de diseño a resolver al implementarlo**: hoy la categoría es a la vez identidad y texto en español — `GameWords` filtra por `category` y la lista de opciones sale de `getAllCategories()`; al traducir hay que separar **id estable** (clave de datos y de filtro) de **nombre mostrado** (recurso traducible), y revisar el valor por defecto de categoría del estado de la app (`savedCategory`, inicializado con el recurso `setup_category_all`).
 5. `<plurals>` para conteos (jugadores, impostores); placeholders `%1$s` / `%1$d`; sin concatenación.
 6. RTL: usar `start/end` en padding/alignment; verificar layout en árabe/hebreo si se soportan.
 7. Tipografías que cubran los alfabetos de los locales soportados (acentos españoles ya cubiertos; cirílico, etc. si procede).
@@ -65,11 +65,11 @@ Y después, el trabajo de i18n propiamente dicho:
 
 ## 5. Decisiones pendientes para la fase 3 [DECISIÓN]
 
-- D-F3-1: ¿Traducir también el contenido (110 palabras + categorías) o solo la UI?
-- D-F3-2: ¿Idioma por sistema o selector in-app?
-- D-F3-3: Locales iniciales (¿solo en, o también pt, fr…?).
-- D-F3-4: ¿Soporte RTL desde el inicio?
-- D-F3-5: ¿C-1 se publica como patch propio (v0.3.5) o se acumula hasta el cierre v0.4.0 de la i18n?
+- D-F3-1: ¿Traducir también el contenido (110 palabras + categorías) o solo la UI? → **DECIDIDO (2026-09-10): traducir todo** (UI + contenido: palabras, pistas y categorías).
+- D-F3-2: ¿Idioma por sistema o selector in-app? → **pendiente**.
+- D-F3-3: Locales iniciales (¿solo en, o también pt, fr…?). → **pendiente**.
+- D-F3-4: ¿Soporte RTL desde el inicio? → **pendiente**.
+- D-F3-5: ¿C-1 se publica como patch propio (v0.3.5) o se acumula hasta el cierre v0.4.0 de la i18n? → **DECIDIDO (2026-09-10): patch propio v0.3.5**.
 
 ## 6. Relación con otras fases
 

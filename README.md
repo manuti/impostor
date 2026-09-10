@@ -93,7 +93,7 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] v0.2.0 — Selector de categorías corregido (ExposedDropdownMenuBox)
 - [x] **v0.3.0 — Fase 2: usabilidad para personas mayores** (naipe giratorio, tema claro/oscuro, texto grande, contraste AA, daltonismo, confirmaciones, primer participante justo)
 - [x] **v0.3.1–v0.3.4 — Fase 2.5: mejoras intermedias** (configuración reordenada con pista off por defecto, toggle de tema en todas las pantallas, jugador activo destacado, carta oculta al mover el dispositivo)
-- [ ] **Fase 3 — Mejora pre-i18n (C-1: no repetir la palabra secreta entre partidas) + internacionalización (i18n)**: plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
+- [ ] **Fase 3 — Mejora pre-i18n (C-1, v0.3.5) + internacionalización (i18n, v0.4.0)**: plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
 - [ ] Fase 4 — Publicación en Google Play: punto de partida y checklist en [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md)
 
 ## Agradecimientos
