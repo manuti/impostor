@@ -143,12 +143,19 @@ val wordList: List<WordPair> = listOf(
 fun getAllCategories(): List<String> =
     listOf("Todas") + wordList.map { it.category }.distinct().sorted()
 
-/** Devuelve una palabra aleatoria, filtrando por categoría si se indica. */
-fun getRandomWord(category: String? = null): WordPair {
+/**
+ * Devuelve una palabra aleatoria, filtrando por categoría si se indica.
+ *
+ * C-1: `exclude` permite evitar la palabra de la partida anterior. Solo se aplica
+ * si el pool conserva más opciones; con una única palabra (o si la excluida no
+ * pertenece a la categoría) se permite repetir.
+ */
+fun getRandomWord(category: String? = null, exclude: WordPair? = null): WordPair {
     val pool = if (category.isNullOrBlank() || category == "Todas") {
         wordList
     } else {
         wordList.filter { it.category == category }
     }
-    return pool.random()
+    val candidates = if (exclude == null) pool else pool.filter { it != exclude }
+    return candidates.ifEmpty { pool }.random()
 }
