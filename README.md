@@ -2,7 +2,7 @@
 
 Juego de deducción social **nativo para Android** (Kotlin + Jetpack Compose) en el que todos los jugadores conocen una palabra secreta excepto uno: **el impostor**, que debe fingir y adivinar la palabra sin ser descubierto.
 
-Versión actual: **v0.3.4** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores y mejoras intermedias de la fase 2.5).
+Versión actual: **v0.3.5** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores, mejoras intermedias de la fase 2.5 y la mejora pre-i18n de la fase 3).
 
 ## Cómo se juega
 
@@ -14,7 +14,7 @@ Versión actual: **v0.3.4** (modo local *pass & play*, un solo dispositivo que s
 
 > Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md). Planes: [`docs/PLAN-FASE2.md`](docs/PLAN-FASE2.md) (usabilidad), [`docs/PLAN-FASE2.5.md`](docs/PLAN-FASE2.5.md) (mejoras intermedias), [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md) (mejora pre-i18n + i18n) y [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md) (publicación en Google Play).
 
-## Características actuales (v0.3.4)
+## Características actuales (v0.3.5)
 
 - Modo local **pass & play** (un solo dispositivo).
 - **110 palabras propias** en 11 categorías (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas).
@@ -25,6 +25,7 @@ Versión actual: **v0.3.4** (modo local *pass & play*, un solo dispositivo que s
 - **Tema oscuro y claro** con botón **sol/luna** en la barra superior de **todas** las pantallas (v0.3.2); la preferencia se recuerda.
 - **Jugador activo destacado** en la revelación (v0.3.3): píldora de contraste con su nombre y pie "Pasa el móvil a [siguiente jugador]".
 - **Carta oculta al mover el dispositivo** (v0.3.4): si el móvil se agita o se gira para pasarlo a otra persona con el rol revelado, la carta se oculta al instante y se conserva el mismo turno (acelerómetro + giroscopio, sin permisos en el manifest).
+- **La palabra secreta no se repite entre partidas seguidas** (v0.3.5): al empezar una partida nueva se descarta la palabra de la anterior (mientras la categoría tenga más de una; si el pool se quedaría vacío, se permite repetir). La memoria dura la sesión.
 - **Texto grande y de alto contraste** (WCAG AA), objetivos táctiles grandes y colores **aptos para daltonismo** (el color nunca es el único canal: siempre con icono + texto + forma).
 - **Primer participante justo**: sin pistas, nunca empieza el impostor (quien no sabe nada); con pistas, puede empezar cualquiera.
 - Confirmaciones antes de acciones destructivas (salir de la partida, eliminar jugador, votación).
@@ -81,7 +82,7 @@ app/src/main/res/values/strings.xml   # Todas las cadenas de la UI (es-419)
 docs/investigacion.md        # Investigación previa (reglas, referencias, comparativa)
 docs/PLAN-FASE2.md           # Plan de usabilidad (v0.3.0) y decisiones de diseño
 docs/PLAN-FASE2.5.md         # Plan de mejoras intermedias (v0.3.1–v0.3.4)
-docs/PLAN-FASE3.md           # Plan de la próxima fase: C-1 (pre-i18n) + i18n (v0.4.0) con reglas vinculantes
+docs/PLAN-FASE3.md           # Plan de la fase 3: C-1 (pre-i18n, v0.3.5) publicada + i18n (v0.4.0) con reglas vinculantes
 docs/PLAN-FASE4.md           # Plan de publicación en Google Play (lecciones + checklist)
 gradle/libs.versions.toml    # Version catalog
 referencias/                 # Clon local de la referencia React (no se sube)
@@ -93,7 +94,8 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] v0.2.0 — Selector de categorías corregido (ExposedDropdownMenuBox)
 - [x] **v0.3.0 — Fase 2: usabilidad para personas mayores** (naipe giratorio, tema claro/oscuro, texto grande, contraste AA, daltonismo, confirmaciones, primer participante justo)
 - [x] **v0.3.1–v0.3.4 — Fase 2.5: mejoras intermedias** (configuración reordenada con pista off por defecto, toggle de tema en todas las pantallas, jugador activo destacado, carta oculta al mover el dispositivo)
-- [ ] **Fase 3 — Mejora pre-i18n (C-1, v0.3.5) + internacionalización (i18n, v0.4.0)**: plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
+- [x] **v0.3.5 — Fase 3: mejora pre-i18n (C-1)** (la palabra secreta no se repite entre partidas consecutivas)
+- [ ] **Fase 3 — Internacionalización (i18n, v0.4.0)**: plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
 - [ ] Fase 4 — Publicación en Google Play: punto de partida y checklist en [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md)
 
 ## Agradecimientos
