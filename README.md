@@ -12,7 +12,7 @@ Versión actual: **v0.3.4** (modo local *pass & play*, un solo dispositivo que s
 4. **Votación**: todos votan quién creen que es el impostor.
 5. **Victoria**: los civiles ganan si eliminan a todos los impostores; los impostores ganan si igualan o superan en número a los civiles.
 
-> Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md). Planes: [`docs/PLAN-FASE2.md`](docs/PLAN-FASE2.md) (usabilidad), [`docs/PLAN-FASE2.5.md`](docs/PLAN-FASE2.5.md) (mejoras intermedias), [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md) (i18n) y [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md) (publicación en Google Play).
+> Reglas basadas en [imposter.app](https://imposter.app/es/how-to-play-imposter-game/). La investigación completa (reglas, versión online de referencia, comparativa de repos existentes y hoja de ruta) está en [`docs/investigacion.md`](docs/investigacion.md). Planes: [`docs/PLAN-FASE2.md`](docs/PLAN-FASE2.md) (usabilidad), [`docs/PLAN-FASE2.5.md`](docs/PLAN-FASE2.5.md) (mejoras intermedias), [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md) (mejora pre-i18n + i18n) y [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md) (publicación en Google Play).
 
 ## Características actuales (v0.3.4)
 
@@ -81,7 +81,7 @@ app/src/main/res/values/strings.xml   # Todas las cadenas de la UI (es-419)
 docs/investigacion.md        # Investigación previa (reglas, referencias, comparativa)
 docs/PLAN-FASE2.md           # Plan de usabilidad (v0.3.0) y decisiones de diseño
 docs/PLAN-FASE2.5.md         # Plan de mejoras intermedias (v0.3.1–v0.3.4)
-docs/PLAN-FASE3.md           # Plan futuro de i18n (v0.4.0) con reglas vinculantes
+docs/PLAN-FASE3.md           # Plan de la próxima fase: C-1 (pre-i18n) + i18n (v0.4.0) con reglas vinculantes
 docs/PLAN-FASE4.md           # Plan de publicación en Google Play (lecciones + checklist)
 gradle/libs.versions.toml    # Version catalog
 referencias/                 # Clon local de la referencia React (no se sube)
@@ -93,7 +93,7 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] v0.2.0 — Selector de categorías corregido (ExposedDropdownMenuBox)
 - [x] **v0.3.0 — Fase 2: usabilidad para personas mayores** (naipe giratorio, tema claro/oscuro, texto grande, contraste AA, daltonismo, confirmaciones, primer participante justo)
 - [x] **v0.3.1–v0.3.4 — Fase 2.5: mejoras intermedias** (configuración reordenada con pista off por defecto, toggle de tema en todas las pantallas, jugador activo destacado, carta oculta al mover el dispositivo)
-- [ ] Fase 3 — Internacionalización (i18n): plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
+- [ ] **Fase 3 — Mejora pre-i18n (C-1: no repetir la palabra secreta entre partidas) + internacionalización (i18n)**: plan en [`docs/PLAN-FASE3.md`](docs/PLAN-FASE3.md)
 - [ ] Fase 4 — Publicación en Google Play: punto de partida y checklist en [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md)
 
 ## Agradecimientos

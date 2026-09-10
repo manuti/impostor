@@ -2,6 +2,7 @@
 
 > Documento de arranque de la fase 4 (publicación en Google Play), creado el **2026-09-02** al cerrar la fase 2.5, con las lecciones aprendidas en las fases 2 y 2.5.
 > La fase 4 **no ha empezado**: este documento fija el punto de partida, las lecciones y el checklist de la tienda.
+> **Orden de fases (2026-09-10)**: primero la fase 3 (C-1 pre-i18n + i18n v0.4.0, ver `PLAN-FASE3.md`); esta fase 4 va después. **C-1 ya no pertenece a esta fase.**
 
 ---
 
@@ -12,6 +13,7 @@
 - **Permisos declarados: ninguno** en el manifest. Es un estado ideal para Play Store — mantenerlo mientras sea posible.
 - Licencia: CC BY-NC 4.0. La app se distribuiría gratuita (uso no comercial) — coherente con la licencia; revisar los términos de Play sobre contenido gratuito al publicar.
 - Repo público: `manuti/impostor`. Release actual: v0.3.4.
+- **Orden de fases**: la fase 3 (mejora pre-i18n C-1 + i18n v0.4.0) se ejecuta **antes** que esta fase 4 (decisión 2026-09-10).
 
 ## 2. Lecciones de la fase 2 (usabilidad, v0.3.0)
 
@@ -55,16 +57,9 @@
 
 ## 6. Cambios de la fase 4 (antes de publicar en Play) — a detallar
 
-Orden previsto; **el primero en implementarse**:
+> **C-1 se movió a la fase 3** (`PLAN-FASE3.md` §3.0) el **2026-09-10**: es una mejora de juego, no un requisito de publicación, y se implementa antes de la i18n. Esta fase arranca sin C-1.
 
-### C-1 · No repetir la palabra secreta entre partidas consecutivas (primer cambio)
-
-- **Qué**: al empezar una partida nueva, evitar que la palabra secreta coincida con la de la partida anterior. Hoy `getRandomWord` usa `pool.random()` sin memoria (`GameWords.kt`): con una categoría de 10 palabras, repetir la anterior tiene 1/10 de probabilidad; en varias partidas seguidas es muy probable.
-- **Cómo**: recordar la última palabra elegida y excluirla del pool en la siguiente selección (si el pool tiene más de 1 palabra; si solo queda 1, permitir repetir). Basta en memoria por sesión (`App.kt`, en `startGame`); opcional: persistirla en SharedPreferences para que sobreviva al cierre de la app.
-- **Toca**: `game/GameWords.kt` (nueva función de selección con exclusión o parámetro) y `ui/App.kt` (pasar/excluir la última palabra). No cambia la mecánica de juego ni añade dependencias.
-- **Verificación**: jugar dos partidas seguidas con la misma categoría → la palabra no se repite; pool de 1 palabra → permite repetir; sin regresión en el flujo normal.
-
-Y el resto del trabajo previsto (a detallar al llegar):
+Trabajo previsto (a detallar al llegar; el primer cambio, por definir):
 - Animación de inicio / splash.
 - Evaluación de telemetrydeck (decisión explícita pendiente).
 - Revisión final de accesibilidad (TalkBack) en la ficha y en la app.
