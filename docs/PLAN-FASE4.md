@@ -59,8 +59,10 @@
 - [ ] **Cuenta de desarrollador** de Google Play (pago único; revisar tarifa vigente) y acceso a Play Console.
 - [ ] **Manifest/permisos**: mantener **cero permisos** (estado actual). Si se añade alguno, justificarlo en la ficha (declaración de permisos de Play).
 - [ ] **targetSdk 36** (ya configurado) — comprobar el requisito mínimo vigente de Play en el momento de publicar.
+- [ ] **Páginas de 16 KB**: el APK de **v0.4.0** no contiene ninguna librería nativa (0 ficheros `.so`, verificado con `python3 -m zipfile -l`), así que cumple el requisito sin trabajo extra; reverificar en el **AAB** de release.
 - [ ] **App Bundle (AAB)** para producción (`bundleRelease`), no APK; firmado con keystore de release (crear y custodiar; no versionar).
 - [ ] **Icono adaptable** y recursos de ficha: capturas de pantalla (mín. 2 teléfono), gráfica destacada, título y descripciones corta/larga en **los idiomas soportados (es-ES y en-GB)** (mismas reglas de estilo que la app: ortografía correcta, p. ej. **píldora**, no *pillula*).
+- [ ] **Idiomas de la ficha**: declarar en Play Console los idiomas soportados (**es-ES** y **en-GB**) en título, descripción corta/larga y capturas si se traducen; la app ya declara sus locales con `res/xml/locales_config.xml` + `android:localeConfig` (fase 3).
 - [ ] **Clasificación de contenido** (cuestionario IARC) y confirmación de políticas (contenido, spam, datos).
 - [ ] **Política de privacidad**: la app no recoge datos (todo local). Publicar URL de política aunque no haya recogida, según los requisitos vigentes.
 - [ ] **Testing**: subir primero a *internal testing* con la lista de probadores; validar instalación desde Play (firma distinta a la de debug).
@@ -78,6 +80,7 @@ Trabajo previsto (a detallar al llegar; el primer cambio, por definir):
 - Evaluación de telemetrydeck (decisión explícita pendiente).
 - Revisión final de accesibilidad (TalkBack) en la ficha y en la app.
 - Preparación de materiales de la ficha de Play (textos, capturas, icono).
+- *(Opcional, solo si el aviso resulta molesto)* conservar el borrador de la partida al cambiar de idioma con `rememberSaveable`, para no perder los nombres; hoy BUG-7 se resuelve avisando (v0.4.0).
 
 ## 7. Post-publicación — mejoras futuras propuestas
 
@@ -93,4 +96,4 @@ Trabajo previsto (a detallar al llegar; el primer cambio, por definir):
 - **i18n (fase 3, cerrada)**: la voz debe seguir el **locale activo** y usar las cadenas ya traducidas (`res/values/` en-GB, `res/values-es/` es-ES) con placeholders (p. ej. "%1$s, tu palabra es %2$s"); el contenido sale de `WordRepository` (`assets/words/<locale>.json`), nunca de texto incrustado en Kotlin.
 - **Estado de la regla (2026-09-11)**: la fase 3 cerró **sin TTS** y sin leer nunca palabra ni pista; la regla «TTS nunca contenido secreto» sigue **vigente** y solo se revisará al implementar T-1, con la condición (proximidad activa) como única vía de lectura del secreto.
 - **Verificación futura en dispositivo**: al acercar el móvil a la oreja con la carta revelada se oye el rol; al retirarlo se silencia; los demás jugadores no oyen nada; el revelado visual actual no cambia.
-- **Dependencias**: fase 3 (i18n) cerrada, para que la voz y las cadenas estén localizadas.
+- **Dependencias**: fase 3 (i18n) **cerrada el 2026-09-11** (v0.4.0) — dependencia cumplida: las cadenas y el contenido ya están localizados para que la voz siga el locale.
