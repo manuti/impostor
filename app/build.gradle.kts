@@ -11,8 +11,8 @@ android {
         applicationId = "com.impostor.game"
         minSdk = 24
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.3.5"
+        versionCode = 9
+        versionName = "0.4.0"
     }
 
     buildTypes {
@@ -42,6 +42,7 @@ kotlin {
 dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.compose.ui)

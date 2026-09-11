@@ -1,0 +1,511 @@
+{
+  "locale": "es-ES",
+  "categories": [
+    {
+      "id": "animals",
+      "name": "Animales",
+      "words": [
+        {
+          "word": "León",
+          "hint": "Rey de la selva africana"
+        },
+        {
+          "word": "Delfín",
+          "hint": "Salta y juega en el mar"
+        },
+        {
+          "word": "Elefante",
+          "hint": "Trompa y orejas enormes"
+        },
+        {
+          "word": "Águila",
+          "hint": "Ave rapaz de vista increíble"
+        },
+        {
+          "word": "Serpiente",
+          "hint": "Se desliza sin patas"
+        },
+        {
+          "word": "Tortuga",
+          "hint": "Lleva su casa a cuestas"
+        },
+        {
+          "word": "Pingüino",
+          "hint": "No vuela, pero nada genial"
+        },
+        {
+          "word": "Canguro",
+          "hint": "Salta con una bolsa"
+        },
+        {
+          "word": "Búho",
+          "hint": "Despierto cuando anochece"
+        },
+        {
+          "word": "Jirafa",
+          "hint": "El cuello más largo"
+        }
+      ]
+    },
+    {
+      "id": "food",
+      "name": "Comida",
+      "words": [
+        {
+          "word": "Paella",
+          "hint": "Arroz con marisco, de Valencia"
+        },
+        {
+          "word": "Tacos",
+          "hint": "Tortilla con relleno, de México"
+        },
+        {
+          "word": "Pizza",
+          "hint": "Masa redonda con queso"
+        },
+        {
+          "word": "Chocolate",
+          "hint": "Dulce hecho de cacao"
+        },
+        {
+          "word": "Gazpacho",
+          "hint": "Sopa fría de tomate"
+        },
+        {
+          "word": "Tortilla de patatas",
+          "hint": "Huevo y patata, tapa típica"
+        },
+        {
+          "word": "Jamón ibérico",
+          "hint": "Curado y de bellota"
+        },
+        {
+          "word": "Churros",
+          "hint": "Masa frita con azúcar"
+        },
+        {
+          "word": "Ensalada",
+          "hint": "Lechuga, tomate y aliño"
+        },
+        {
+          "word": "Flan",
+          "hint": "Postre de huevo con caramelo"
+        }
+      ]
+    },
+    {
+      "id": "places",
+      "name": "Lugares",
+      "words": [
+        {
+          "word": "Biblioteca",
+          "hint": "Lugar lleno de libros"
+        },
+        {
+          "word": "Estadio",
+          "hint": "Donde se juega el fútbol"
+        },
+        {
+          "word": "Mercado",
+          "hint": "Fruta, verdura y puestos"
+        },
+        {
+          "word": "Playa",
+          "hint": "Arena, olas y sombrilla"
+        },
+        {
+          "word": "Hospital",
+          "hint": "Curan a los enfermos"
+        },
+        {
+          "word": "Estación de tren",
+          "hint": "Andenes y vías"
+        },
+        {
+          "word": "Museo",
+          "hint": "Cuadros y esculturas antiguas"
+        },
+        {
+          "word": "Teatro",
+          "hint": "Obras y funciones"
+        },
+        {
+          "word": "Parque",
+          "hint": "Árboles, bancos y columpios"
+        },
+        {
+          "word": "Farmacia",
+          "hint": "Medicinas y recetas"
+        }
+      ]
+    },
+    {
+      "id": "objects",
+      "name": "Objetos",
+      "words": [
+        {
+          "word": "Paraguas",
+          "hint": "Se abre cuando llueve"
+        },
+        {
+          "word": "Reloj",
+          "hint": "Mide el tiempo"
+        },
+        {
+          "word": "Linterna",
+          "hint": "Ilumina en la oscuridad"
+        },
+        {
+          "word": "Mochila",
+          "hint": "Se lleva a la espalda"
+        },
+        {
+          "word": "Tijeras",
+          "hint": "Cortan papel y tela"
+        },
+        {
+          "word": "Televisor",
+          "hint": "Programas y series"
+        },
+        {
+          "word": "Llaves",
+          "hint": "Abre puertas"
+        },
+        {
+          "word": "Espejo",
+          "hint": "Devuelve tu imagen"
+        },
+        {
+          "word": "Cepillo de dientes",
+          "hint": "Higiene bucal diaria"
+        },
+        {
+          "word": "Globo terráqueo",
+          "hint": "Mapa esférico del mundo"
+        }
+      ]
+    },
+    {
+      "id": "professions",
+      "name": "Profesiones",
+      "words": [
+        {
+          "word": "Médico",
+          "hint": "Cura enfermedades"
+        },
+        {
+          "word": "Bombero",
+          "hint": "Apaga incendios"
+        },
+        {
+          "word": "Profesor",
+          "hint": "Enseña en clase"
+        },
+        {
+          "word": "Panadero",
+          "hint": "Hace pan y bollos"
+        },
+        {
+          "word": "Policía",
+          "hint": "Mantiene el orden"
+        },
+        {
+          "word": "Peluquero",
+          "hint": "Corta y peina el pelo"
+        },
+        {
+          "word": "Agricultor",
+          "hint": "Cultiva el campo"
+        },
+        {
+          "word": "Camarero",
+          "hint": "Sirve en restaurantes"
+        },
+        {
+          "word": "Mecánico",
+          "hint": "Arregla coches"
+        },
+        {
+          "word": "Cartero",
+          "hint": "Reparte cartas y paquetes"
+        }
+      ]
+    },
+    {
+      "id": "sports",
+      "name": "Deportes",
+      "words": [
+        {
+          "word": "Fútbol",
+          "hint": "Once contra once, balón a portería"
+        },
+        {
+          "word": "Baloncesto",
+          "hint": "Canasta y aro alto"
+        },
+        {
+          "word": "Tenis",
+          "hint": "Raqueta y red"
+        },
+        {
+          "word": "Natación",
+          "hint": "Crol, braza y piscina"
+        },
+        {
+          "word": "Ciclismo",
+          "hint": "Bicicleta de carretera"
+        },
+        {
+          "word": "Atletismo",
+          "hint": "Correr, saltar y lanzar"
+        },
+        {
+          "word": "Boxeo",
+          "hint": "Guantes y ring"
+        },
+        {
+          "word": "Esquí",
+          "hint": "Nieve, pendientes y bastones"
+        },
+        {
+          "word": "Voleibol",
+          "hint": "Red alta y remate"
+        },
+        {
+          "word": "Gimnasia",
+          "hint": "Ejercicios y aparatos"
+        }
+      ]
+    },
+    {
+      "id": "countries",
+      "name": "Países",
+      "words": [
+        {
+          "word": "España",
+          "hint": "Flamenco y siesta, en Europa"
+        },
+        {
+          "word": "México",
+          "hint": "Mariachi y tacos"
+        },
+        {
+          "word": "Japón",
+          "hint": "Sushi y monte Fuji"
+        },
+        {
+          "word": "Argentina",
+          "hint": "Tango y asado"
+        },
+        {
+          "word": "Italia",
+          "hint": "Pasta y Coliseo"
+        },
+        {
+          "word": "Francia",
+          "hint": "Torre Eiffel y baguette"
+        },
+        {
+          "word": "Brasil",
+          "hint": "Samba y carnaval"
+        },
+        {
+          "word": "Egipto",
+          "hint": "Pirámides y río Nilo"
+        },
+        {
+          "word": "Australia",
+          "hint": "Canguros y playas"
+        },
+        {
+          "word": "India",
+          "hint": "Taj Mahal y curry"
+        }
+      ]
+    },
+    {
+      "id": "nature",
+      "name": "Naturaleza",
+      "words": [
+        {
+          "word": "Volcán",
+          "hint": "Montaña que escupe lava"
+        },
+        {
+          "word": "Río",
+          "hint": "Agua que fluye hacia el mar"
+        },
+        {
+          "word": "Bosque",
+          "hint": "Muchos árboles juntos"
+        },
+        {
+          "word": "Desierto",
+          "hint": "Arena y calor extremo"
+        },
+        {
+          "word": "Cascada",
+          "hint": "Agua que cae desde lo alto"
+        },
+        {
+          "word": "Luna",
+          "hint": "Brilla por la noche"
+        },
+        {
+          "word": "Arcoíris",
+          "hint": "Siete colores tras la lluvia"
+        },
+        {
+          "word": "Tormenta",
+          "hint": "Rayos y truenos"
+        },
+        {
+          "word": "Estrella",
+          "hint": "Punto brillante en el cielo"
+        },
+        {
+          "word": "Montaña",
+          "hint": "Cima alta y nevada"
+        }
+      ]
+    },
+    {
+      "id": "concepts",
+      "name": "Conceptos",
+      "words": [
+        {
+          "word": "Amistad",
+          "hint": "Confianza entre personas"
+        },
+        {
+          "word": "Suerte",
+          "hint": "Tener fortuna"
+        },
+        {
+          "word": "Silencio",
+          "hint": "Ausencia de sonidos"
+        },
+        {
+          "word": "Libertad",
+          "hint": "Poder elegir"
+        },
+        {
+          "word": "Tiempo",
+          "hint": "Minutos y horas"
+        },
+        {
+          "word": "Memoria",
+          "hint": "Recordar el pasado"
+        },
+        {
+          "word": "Miedo",
+          "hint": "Susto intenso"
+        },
+        {
+          "word": "Alegría",
+          "hint": "Sentirse muy feliz"
+        },
+        {
+          "word": "Paciencia",
+          "hint": "Esperar sin enfadarse"
+        },
+        {
+          "word": "Sorpresa",
+          "hint": "Algo inesperado"
+        }
+      ]
+    },
+    {
+      "id": "fantasy",
+      "name": "Fantasía",
+      "words": [
+        {
+          "word": "Dragón",
+          "hint": "Escupe fuego y vuela"
+        },
+        {
+          "word": "Hada",
+          "hint": "Alas y varita mágica"
+        },
+        {
+          "word": "Unicornio",
+          "hint": "Cuerno en la frente"
+        },
+        {
+          "word": "Mago",
+          "hint": "Varita y hechizos"
+        },
+        {
+          "word": "Sirena",
+          "hint": "Mitad mujer, mitad pez"
+        },
+        {
+          "word": "Bruja",
+          "hint": "Escoba y pócimas"
+        },
+        {
+          "word": "Ogro",
+          "hint": "Grande, verde y gruñón"
+        },
+        {
+          "word": "Elfo",
+          "hint": "Orejas puntiagudas"
+        },
+        {
+          "word": "Troll",
+          "hint": "Vive bajo el puente"
+        },
+        {
+          "word": "Fantasma",
+          "hint": "Atraviesa las paredes"
+        }
+      ]
+    },
+    {
+      "id": "movies",
+      "name": "Películas",
+      "words": [
+        {
+          "word": "Titanic",
+          "hint": "El barco que se hunde"
+        },
+        {
+          "word": "King Kong",
+          "hint": "Gorila gigante en rascacielos"
+        },
+        {
+          "word": "Parque Jurásico",
+          "hint": "Dinosaurios en un parque"
+        },
+        {
+          "word": "Star Wars",
+          "hint": "La fuerza y sables láser"
+        },
+        {
+          "word": "Harry Potter",
+          "hint": "Niño mago con gafas"
+        },
+        {
+          "word": "El Rey León",
+          "hint": "Simba y la sabana"
+        },
+        {
+          "word": "Indiana Jones",
+          "hint": "Arqueólogo con látigo"
+        },
+        {
+          "word": "E.T.",
+          "hint": "Extraterrestre que quiere volver"
+        },
+        {
+          "word": "Los Simpson",
+          "hint": "La familia amarilla"
+        },
+        {
+          "word": "Matrix",
+          "hint": "Neo y las pastillas"
+        }
+      ]
+    }
+  ]
+}

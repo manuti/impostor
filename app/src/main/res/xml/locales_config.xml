@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Idiomas soportados por la app (D-F3-2: opción A + selector in-app).
+    - es-ES: español (recursos en values-es/).
+    - en-GB: inglés británico. El inglés vive en values/ (por defecto), así que
+      es también el fallback para cualquier idioma no soportado.
+    En Android 13+ esto habilita además el ajuste de idioma por app del sistema.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="es-ES" />
+    <locale android:name="en-GB" />
+</locale-config>

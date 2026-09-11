@@ -1,0 +1,27 @@
+name: Validar listas de palabras
+
+# Primera barrera automática de los PRs de idioma: el esquema, los ids y la
+# coherencia entre idiomas. La revisión humana la exige CODEOWNERS.
+on:
+  pull_request:
+    paths:
+      - 'app/src/main/assets/words/**'
+      - 'tools/validate_words.py'
+      - '.github/workflows/validate-words.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/src/main/assets/words/**'
+      - 'tools/validate_words.py'
+
+jobs:
+  validar:
+    name: Comprobar los JSON de idiomas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validar el contenido del juego
+        run: python3 tools/validate_words.py

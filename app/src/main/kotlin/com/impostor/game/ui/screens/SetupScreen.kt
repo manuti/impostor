@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.impostor.game.R
 import com.impostor.game.game.GameConfig
-import com.impostor.game.game.getAllCategories
+import com.impostor.game.game.WordRepository
+import com.impostor.game.ui.components.LanguageButton
 import com.impostor.game.ui.components.ThemeToggleButton
 import com.impostor.game.ui.theme.gameColors
 
@@ -52,19 +54,26 @@ import com.impostor.game.ui.theme.gameColors
 @Composable
 fun SetupScreen(
     initialPlayerNames: List<String>,
-    initialCategory: String,
+    initialCategoryId: String,
     onStartGame: (List<String>, GameConfig) -> Unit,
 ) {
     var playerNames by remember { mutableStateOf(initialPlayerNames.toMutableList()) }
     var newName by remember { mutableStateOf("") }
     var impostorCount by remember { mutableStateOf(1) }
     var showHintToImpostor by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf(initialCategory) }
+    var selectedCategoryId by remember { mutableStateOf(initialCategoryId) }
     var categoryMenuOpen by remember { mutableStateOf(false) }
     var pendingRemove by remember { mutableStateOf<String?>(null) }
 
+    val context = LocalContext.current
     val allCategoriesLabel = stringResource(R.string.setup_category_all)
-    val categories = listOf(allCategoriesLabel) + getAllCategories()
+    // (id estable, nombre localizado): el id es lo que viaja a GameConfig; el nombre solo se muestra.
+    val categories = listOf(WordRepository.ALL_ID to allCategoriesLabel) +
+        WordRepository.choices(context)
+    val selectedCategoryLabel = categories
+        .firstOrNull { it.first == selectedCategoryId }
+        ?.second
+        ?: allCategoriesLabel
     val maxImpostors = (playerNames.size - 1).coerceAtLeast(1)
     val shownImpostors = impostorCount.coerceAtMost(maxImpostors)
     val canStartGame = playerNames.size >= 3 && shownImpostors < playerNames.size
@@ -89,7 +98,10 @@ fun SetupScreen(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
-            ThemeToggleButton()
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LanguageButton(hasPlayers = playerNames.isNotEmpty())
+                ThemeToggleButton()
+            }
         }
         Spacer(Modifier.height(20.dp))
 
@@ -117,7 +129,7 @@ fun SetupScreen(
             onExpandedChange = { categoryMenuOpen = it },
         ) {
             OutlinedTextField(
-                value = selectedCategory,
+                value = selectedCategoryLabel,
                 onValueChange = {},
                 readOnly = true,
                 singleLine = true,
@@ -131,11 +143,11 @@ fun SetupScreen(
                 expanded = categoryMenuOpen,
                 onDismissRequest = { categoryMenuOpen = false },
             ) {
-                categories.forEach { category ->
+                categories.forEach { (id, label) ->
                     DropdownMenuItem(
-                        text = { Text(category, style = MaterialTheme.typography.bodyLarge) },
+                        text = { Text(label, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            selectedCategory = category
+                            selectedCategoryId = id
                             categoryMenuOpen = false
                         },
                     )
@@ -143,10 +155,10 @@ fun SetupScreen(
             }
         }
         Text(
-            text = if (selectedCategory == allCategoriesLabel) {
+            text = if (selectedCategoryId == WordRepository.ALL_ID) {
                 stringResource(R.string.setup_category_all_hint)
             } else {
-                stringResource(R.string.setup_category_only_hint, selectedCategory)
+                stringResource(R.string.setup_category_only_hint, selectedCategoryLabel)
             },
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -237,7 +249,7 @@ fun SetupScreen(
                     GameConfig(
                         impostorCount = shownImpostors,
                         showHintToImpostor = showHintToImpostor,
-                        category = selectedCategory.takeIf { it != allCategoriesLabel },
+                        category = selectedCategoryId.takeIf { it != WordRepository.ALL_ID },
                     ),
                 )
             },
@@ -257,7 +269,7 @@ fun SetupScreen(
             val playersSummary = pluralStringResource(R.plurals.setup_summary_players, playerNames.size, playerNames.size)
             val impostorsSummary = pluralStringResource(R.plurals.setup_summary_impostors, shownImpostors, shownImpostors)
             Text(
-                text = "$playersSummary, $impostorsSummary",
+                text = stringResource(R.string.setup_summary_joined, playersSummary, impostorsSummary),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

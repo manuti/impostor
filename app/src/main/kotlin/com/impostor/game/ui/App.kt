@@ -27,7 +27,7 @@ import com.impostor.game.game.GameState
 import com.impostor.game.game.Player
 import com.impostor.game.game.Role
 import com.impostor.game.game.WordPair
-import com.impostor.game.game.getRandomWord
+import com.impostor.game.game.WordRepository
 import com.impostor.game.ui.screens.EndGameScreen
 import com.impostor.game.ui.screens.GameScreen
 import com.impostor.game.ui.screens.RoleRevealScreen
@@ -79,16 +79,16 @@ fun App() {
 private fun AppContent() {
     var gameState by remember { mutableStateOf(GameState()) }
     var savedPlayerNames by remember { mutableStateOf(listOf<String>()) }
-    val allCategoriesLabel = stringResource(R.string.setup_category_all)
-    var savedCategory by remember { mutableStateOf(allCategoriesLabel) }
+    val context = LocalContext.current
+    var savedCategory by remember { mutableStateOf(WordRepository.ALL_ID) }
     // C-1: última palabra secreta jugada, para no repetirla en la partida siguiente
     // (en memoria de sesión; se pierde al cerrar la app o recrear la actividad).
     var lastWord by remember { mutableStateOf<WordPair?>(null) }
 
     val startGame: (List<String>, GameConfig) -> Unit = { playerNames, config ->
-        savedCategory = config.category ?: allCategoriesLabel
+        savedCategory = config.category ?: WordRepository.ALL_ID
         savedPlayerNames = playerNames
-        val word = getRandomWord(config.category, lastWord)
+        val word = WordRepository.randomWord(context, config.category, lastWord)
         lastWord = word
 
         // Barajado Fisher-Yates para asignar impostores (misma mecánica que la referencia).
@@ -171,7 +171,7 @@ private fun AppContent() {
         when (gameState.phase) {
             GamePhase.SETUP -> SetupScreen(
                 initialPlayerNames = savedPlayerNames,
-                initialCategory = savedCategory,
+                initialCategoryId = savedCategory,
                 onStartGame = startGame,
             )
 

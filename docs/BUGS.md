@@ -54,6 +54,14 @@
 - **Calibración del umbral (misma fecha)**: acelerómetro lineal 3 m/s² + giroscopio 2 rad/s (el giro de pasar el móvil entre jugadores no lo ve el acelerómetro solo).
 - **Estado**: ✅ **corregido y verificado en dispositivo (2026-09-02)**.
 
+## BUG-7 — Al cambiar el idioma se perdían los jugadores añadidos (i18n, v0.4.0)
+
+- **Severidad**: media (pérdida de datos introducidos por el usuario, con riesgo de confusión en mitad de una partida).
+- **Síntoma**: al usar el selector de idioma de la app, se aplicaba la nueva traducción pero **desaparecían los jugadores ya añadidos y la configuración de la partida** (categoría, impostores, pista).
+- **Causa raíz (diagnóstico en código)**: `AppCompatDelegate.setApplicationLocales(...)` aplica el locale **recreando la actividad**; el estado de la partida vive en memoria (`remember` de Compose) y no se persiste, así que la recreación lo descarta.
+- **Fix aplicado (2026-09-11)**: `LanguageButton(hasPlayers)` muestra un diálogo de confirmación (`language_change_title` / `language_change_text` / `language_change_confirm`) antes de cambiar el idioma si ya hay jugadores; sin jugadores (lista vacía) el cambio se aplica directo, sin fricción. Alternativa futura, si se quiere no perder nada: `rememberSaveable` o persistir el borrador de la partida.
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-09-11)**.
+
 ## Resumen
 
 | Bug | Severidad | Estado |
@@ -64,3 +72,4 @@
 | BUG-4 · pupila en tema claro | Baja | ✅ corregido y verificado (2026-08-28) |
 | BUG-5 · pie repite el nombre del jugador activo | Media | ✅ corregido y verificado (2026-08-31) |
 | BUG-6 · crash por SENSOR_DELAY_FASTEST sin permiso | Crítica | ✅ corregido y verificado (2026-09-02) |
+| BUG-7 · pérdida de jugadores al cambiar de idioma | Media | ✅ corregido y verificado (2026-09-11) |

@@ -1,0 +1,11 @@
+# Propietarios del código (code owners).
+# Cualquier PR requiere la revisión del propietario del repositorio.
+* @manuti
+
+# PRs de idioma: las listas de palabras y los textos traducidos los valida
+# siempre una persona autorizada antes de fusionarse.
+/app/src/main/assets/words/ @manuti
+/app/src/main/res/values/ @manuti
+/app/src/main/res/values-es/ @manuti
+/app/src/main/res/xml/locales_config.xml @manuti
+/tools/validate_words.py @manuti
