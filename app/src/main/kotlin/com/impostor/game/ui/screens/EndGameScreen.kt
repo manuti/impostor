@@ -138,7 +138,7 @@ fun EndGameScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(4.dp))
-                PlayerChips(impostors, gameColors.impostor)
+                PlayerChips(impostors, gameColors.impostorBg, gameColors.onImpostorBg, gameColors.impostor)
                 Spacer(Modifier.height(12.dp))
                 Text(
                     text = stringResource(R.string.end_civilians_list, civilians.size),
@@ -148,7 +148,7 @@ fun EndGameScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(4.dp))
-                PlayerChips(civilians, gameColors.civil)
+                PlayerChips(civilians, gameColors.civilBg, gameColors.onCivilBg, gameColors.civil)
             }
         }
 
@@ -170,8 +170,23 @@ fun EndGameScreen(
     }
 }
 
+/**
+ * Burbujas con el nombre de cada jugador.
+ *
+ * Punto 12: se usa el par semántico completo de la tarjeta
+ * (`impostorBg`/`onImpostorBg` y `civilBg`/`onCivilBg`) en lugar de tinta con
+ * alfa. El nombre en `impostor` sobre el fondo rojizo daba ≈3,9:1 en tema claro
+ * (por debajo de AA); con `onImpostorBg` sube a ≈8,6:1 en claro y ≈10,8:1 en
+ * oscuro. Los eliminados se siguen distinguiendo por tachado + menos relleno,
+ * no solo por opacidad.
+ */
 @Composable
-private fun PlayerChips(players: List<Player>, color: Color) {
+private fun PlayerChips(
+    players: List<Player>,
+    containerColor: Color,
+    contentColor: Color,
+    borderColor: Color,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,17 +196,18 @@ private fun PlayerChips(players: List<Player>, color: Color) {
         players.forEach { player ->
             Surface(
                 shape = RoundedCornerShape(50),
-                color = color.copy(alpha = if (player.isAlive) 0.25f else 0.10f),
+                color = containerColor.copy(alpha = if (player.isAlive) 0.85f else 0.45f),
                 border = BorderStroke(
                     1.dp,
-                    color.copy(alpha = if (player.isAlive) 0.6f else 0.3f),
+                    borderColor.copy(alpha = if (player.isAlive) 0.7f else 0.35f),
                 ),
             ) {
                 Text(
                     text = player.name,
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = color.copy(alpha = if (player.isAlive) 1f else 0.5f),
+                    fontWeight = if (player.isAlive) FontWeight.SemiBold else FontWeight.Normal,
+                    color = contentColor.copy(alpha = if (player.isAlive) 1f else 0.75f),
                     textDecoration = if (player.isAlive) null else TextDecoration.LineThrough,
                 )
             }

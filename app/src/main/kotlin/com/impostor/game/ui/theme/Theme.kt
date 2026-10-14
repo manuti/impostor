@@ -86,7 +86,10 @@ private val LightGameColors = GameColors(
     civilBg = Color(0xFFE8F0FE),
     onCivilBg = Color(0xFF1E3A8A),
     success = Color(0xFF15803D),
-    warn = Color(0xFFB45309),
+    // Ticket estético (punto 5): el ámbar oscuro anterior (0xFFB45309) daba 4,94:1
+    // sobre blanco, el par más justo de la app para texto de 16sp. 0xFF92400E
+    // sube a ~6,97:1 manteniendo el tono de aviso.
+    warn = Color(0xFF92400E),
     cardFrontBg = Color(0xFFFFFFFF),
     cardFrontBorder = Color(0xFF6D28D9),
     eye = Color(0xFF312E81),

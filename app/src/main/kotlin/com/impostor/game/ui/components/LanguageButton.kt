@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.impostor.game.R
@@ -49,13 +50,19 @@ fun LanguageButton(hasPlayers: Boolean, modifier: Modifier = Modifier) {
     val appLanguage = if (appLocales.isEmpty) null else appLocales.get(0)?.language
     val effectiveLanguage = appLanguage ?: systemLanguage
     val chooseLabel = stringResource(R.string.language_cd)
+    // Punto 8: el botón es solo "ES"/"EN". Para TalkBack se anuncia la acción
+    // (contentDescription) y el idioma activo (stateDescription).
+    val currentLabel = stringResource(if (effectiveLanguage == "es") R.string.language_es else R.string.language_en)
     val applyLanguage = { tag: String ->
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
     }
 
     TextButton(
         onClick = { dialogOpen = true },
-        modifier = modifier.semantics { contentDescription = chooseLabel },
+        modifier = modifier.semantics {
+            contentDescription = chooseLabel
+            stateDescription = currentLabel
+        },
     ) {
         Text(
             text = if (effectiveLanguage == "es") "ES" else "EN",

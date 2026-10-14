@@ -19,9 +19,20 @@
                 android:value="true" />
         </service>
 
+        <!-- Actividad única, en vertical.
+             `screenOrientation="portrait"` impide el giro (el juego es de pasar el
+             móvil de mano en mano y girarlo solo aporta problemas de layout).
+             `configChanges` es la red de seguridad: desde Android 16 (API 36) el
+             sistema IGNORA el bloqueo de orientación en pantallas de 600 dp o más
+             de ancho, y sin esto girar en una tablet recrearía la actividad y
+             perdería la partida en curso (el estado del juego vive en memoria).
+             Con `configChanges` la actividad no se recrea: Compose vuelve a medir
+             y el estado se conserva en cualquier fase. -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

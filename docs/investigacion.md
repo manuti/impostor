@@ -4,8 +4,21 @@
 > Objetivo: Android nativo (primera prioridad), con interés en iOS o al menos una PWA.
 > Fase 2 (pendiente): mejoras de usabilidad para personas mayores.
 >
-> Fuentes principales: [imposter.app/es](https://imposter.app/es/), [guía de reglas](https://imposter.app/es/how-to-play-imposter-game/), [modo online](https://imposter.app/es/online/) y ~15 repositorios de GitHub (ver sección 3).
-> Fecha de recopilación: 2026-08-25.
+> Fuentes principales: [imposter.app/es](https://imposter.app/es/), [guía de reglas](https://imposter.app/es/how-to-play-imposter-game/), [modo online](https://imposter.app/es/online/), la definición del **género** en Wikipedia (sección 0) y ~15 repositorios de GitHub (ver sección 3).
+> Fecha de recopilación: 2026-08-25 (sección 0 añadida el 2026-10-14).
+
+---
+
+## 0. El género: juego de deducción social (Wikipedia)
+
+> Fuente principal del **género** (añadida el **2026-10-14**, v0.4.1). Las reglas concretas de §1 siguen saliendo de imposter.app; esta sección sitúa el juego en su familia. Enlaces: [Juego de deducción social](https://es.wikipedia.org/wiki/Juego_de_deducci%C3%B3n_social), [Social deduction game](https://en.wikipedia.org/wiki/Social_deduction_game), [Jeu de déduction sociale](https://fr.wikipedia.org/wiki/Jeu_de_d%C3%A9duction_sociale).
+
+- **Definición**: un juego de deducción social es aquel en el que los jugadores intentan descubrir el **rol oculto** o la **lealtad de equipo** de los demás. Habitualmente se juega por equipos, uno «bueno» y otro «malo» (en nuestro caso: civiles e impostor).
+- **Cómo se juega**: los jugadores usan la **lógica y el razonamiento deductivo** para deducir los roles ajenos, mientras otros **blufean** para no levantar sospechas.
+- **Las dos fases** (definición laxa del género): la discusión se reparte entre el **conocimiento privado** y la **plaza pública**, la fase abierta en la que se hacen acusaciones o se hace público lo que se sabe. Es exactamente la separación de la app: reparto privado de la carta → debate y votación en público.
+- **Precedentes**: *Hoax* (1981) y *Mafia*/*Werewolf* (1986); adaptaciones a videojuego (*Space Station 13*, *Town of Salem*, *Among Us*) y a televisión (*De Mol*/*The Mole*, *The Traitors*). Otros títulos del género: *Bang!*, *Secret Hitler*, *The Resistance*, *Coup*, *The Chameleon*, *Spyfall*, *Love Letter*.
+- **Qué aporta al producto**: (a) nombrar el género en la ficha y en la app ayuda a entender la mecánica en una línea; (b) la **fase pública** se etiqueta en pantalla («Fase pública · debated y votad») para marcar el paso del reparto privado al debate (la etiqueta de la fase privada se descartó en v0.4.1 por falta de alto en esa pantalla); (c) el género **exige que el rol no se filtre por canales involuntarios** — de ahí que en v0.4.1 se revisara qué elementos pueden codificar el rol: el reverso de la carta sí (solo se ve con la carta ya girada, delante de su dueño), pero todo lo visible con la carta cerrada no (borde, anverso y píldora del nombre quedan neutros). Esa frontera está en el ADR 17.
+- **Estrategia y meta-juego**: decidir cuánto tiempo mantener la propia versión de los hechos según lo que dicen los demás; varias rondas con los mismos jugadores añaden un componente social de meta-juego (útil para futuras mejoras: rondas encadenadas, historial de partidas).
 
 ---
 

@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -29,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -81,6 +87,8 @@ fun RoleRevealScreen(
     var showExitDialog by remember { mutableStateOf(false) }
     var showHelpDialog by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
+    // Punto 11: el foco inicial del diálogo va a "Cancelar" (opción no destructiva).
+    val cancelExitFocus = remember { FocusRequester() }
 
     // BUG-1: la rotación se resetea instantáneamente (0°) al cambiar de jugador
     // (key por currentPlayerIndex), de modo que el reverso con el contenido
@@ -104,6 +112,16 @@ fun RoleRevealScreen(
     val isImpostor = currentPlayer.role == Role.IMPOSTOR
     val roleHeader = stringResource(if (isImpostor) R.string.role_impostor else R.string.role_your_word)
     val cardCd = stringResource(if (revealed) R.string.role_card_revealed_cd else R.string.role_card_locked_cd)
+    // El reverso SÍ se tiñe según el rol (revertido el 2026-10-14 tras revisar
+    // el punto 3 del ticket): el color del rol solo aparece con la carta ya
+    // girada, es decir, delante de su dueño y a la vez que el texto del rol, así
+    // que no filtra nada que el texto no diga en el mismo instante. Además es
+    // la señal pre-atencional más rápida para "¿soy el impostor?", que es el
+    // momento clave del juego (audiencia de baja visión).
+    //
+    // Lo que SÍ debe quedar neutro es todo lo visible con la carta cerrada: el
+    // borde exterior (cardFrontBorder), el anverso (cardFrontBg + ojo) y la
+    // píldora del nombre (primaryContainer). Ahí estaba la razón del ticket.
     val cardBg = if (isImpostor) gameColors.impostorBg else gameColors.civilBg
     val onCardBg = if (isImpostor) gameColors.onImpostorBg else gameColors.onCivilBg
 
@@ -143,19 +161,47 @@ fun RoleRevealScreen(
 
         // Puntos de progreso
         Spacer(Modifier.height(6.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             players.forEachIndexed { index, _ ->
-                val dotColor = when {
-                    index < currentPlayerIndex -> gameColors.success
-                    index == currentPlayerIndex -> MaterialTheme.colorScheme.onBackground
-                    else -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-                }
+                val seen = index < currentPlayerIndex
+                val isCurrent = index == currentPlayerIndex
+                // Punto 4: 16 dp de caja (≥ 8-10 dp de glifo) y estado por
+                // relleno/contorno, no solo por color — lleno = visto,
+                // anillo grueso = actual, hueco tenue = pendiente (WCAG 1.4.1).
                 Box(
-                    Modifier
-                        .size(10.dp)
-                        .clip(CircleShape)
-                        .background(dotColor)
-                )
+                    modifier = Modifier.size(16.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    when {
+                        seen -> Box(
+                            Modifier
+                                .size(12.dp)
+                                .clip(CircleShape)
+                                .background(gameColors.success)
+                        )
+
+                        isCurrent -> Box(
+                            Modifier
+                                .size(16.dp)
+                                .clip(CircleShape)
+                                .border(3.dp, MaterialTheme.colorScheme.onBackground, CircleShape)
+                        )
+
+                        else -> Box(
+                            Modifier
+                                .size(12.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    1.5.dp,
+                                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.35f),
+                                    CircleShape,
+                                )
+                        )
+                    }
+                }
             }
         }
         Spacer(Modifier.height(14.dp))
@@ -253,6 +299,9 @@ fun RoleRevealScreen(
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        // Sin icono de rol (2026-10-14): el color del fondo ya
+                        // distingue impostor/civil y el icono en línea con la
+                        // cabecera descuadraba el centrado del texto.
                         Text(
                             text = roleHeader,
                             style = MaterialTheme.typography.titleMedium,
@@ -309,19 +358,10 @@ fun RoleRevealScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         } else if (cardHiddenByShake) {
-            Text(
-                text = stringResource(R.string.role_card_hidden),
-                style = MaterialTheme.typography.bodyMedium,
-                color = gameColors.warn,
-                textAlign = TextAlign.Center,
-            )
+            // Punto 6: el aviso va con icono, no solo con color.
+            WarningText(stringResource(R.string.role_card_hidden))
         } else {
-            Text(
-                text = stringResource(R.string.role_must_view),
-                style = MaterialTheme.typography.bodyMedium,
-                color = gameColors.warn,
-                textAlign = TextAlign.Center,
-            )
+            WarningText(stringResource(R.string.role_must_view))
         }
 
         Spacer(Modifier.weight(1f))
@@ -351,7 +391,7 @@ fun RoleRevealScreen(
                 Text(
                     text = stringResource(R.string.role_pass_phone, players[nextPlayerIndex].name),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -362,6 +402,7 @@ fun RoleRevealScreen(
 
     // Confirmación al salir de la partida
     if (showExitDialog) {
+        LaunchedEffect(Unit) { cancelExitFocus.requestFocus() }
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
             title = { Text(stringResource(R.string.role_exit_title)) },
@@ -381,7 +422,10 @@ fun RoleRevealScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showExitDialog = false }) {
+                TextButton(
+                    onClick = { showExitDialog = false },
+                    modifier = Modifier.focusRequester(cancelExitFocus),
+                ) {
                     Text(stringResource(R.string.action_cancel))
                 }
             },
@@ -443,5 +487,29 @@ private fun FlipCard(
                     .graphicsLayer { rotationY = 180f }
             ) { back() }
         }
+    }
+}
+
+/**
+ * Aviso con icono + texto (punto 6): el color nunca es el único canal, igual
+ * que "✔ HAS VISTO TU ROL" con `success` o el escudo de "¡Victoria Civil!".
+ */
+@Composable
+private fun WarningText(text: String) {
+    val warn = MaterialTheme.gameColors.warn
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            tint = warn,
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(Modifier.width(6.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = warn,
+            textAlign = TextAlign.Center,
+        )
     }
 }
