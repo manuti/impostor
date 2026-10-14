@@ -103,6 +103,32 @@ Verificación: **v0.4.1 verificada en dispositivo real (2026-10-14, Android 16)*
 
 Residual no verificado explícitamente en esta ronda (no bloquea la release, anotado para la prueba de la fase 4): legibilidad del icono de voto y del icono de aviso en las capturas finales, comportamiento del botón deshabilitado a ojo, anuncio de TalkBack en los botones de voto, y fuente de sistema al 130 % o más. **En tablet (≥600 dp) con Android 16 el layout sí rota** (el sistema ignora el bloqueo de orientación), aunque la partida ya no se pierde; pendiente de comprobar en tablet.
 
+### 6.2 Release optimizado con R8 — **v0.4.2** (2026-10-14)
+
+El release **no tenía ninguna optimización activada** (`isMinifyEnabled = false`) y el artefacto que se probaba y publicaba salía de `assembleDebug`. El mayor ahorro no estaba en el código, sino en encender la herramienta que ya trae Android (rung 4 de `AGENTS.md`): no se añadió ninguna dependencia.
+
+**Medición aislada** (mismo código, 2026-10-14): release sin R8 = **7.447.028 B**; release con R8 + `shrinkResources` = **1.627.850 B**. Un **−78 %** atribuible solo a R8 (se compara release contra release, no release contra debug, para no atribuir a R8 la diferencia de build type). El APK de depuración, para referencia, pesa 11.455.014 B.
+
+**Cambios**:
+
+- `release { isMinifyEnabled = true; isShrinkResources = true }` en `app/build.gradle.kts`.
+- `signingConfig = signingConfigs.getByName("debug")` **temporal**: sin firma el release no se instala y el ciclo de la fase 2 exige probarlo en dispositivo. Es la misma clave que los APKs anteriores, así que se instala encima. **Sustituir por el keystore real de la fase 4 al publicar.**
+- Código muerto eliminado (auditoría con la escalera de `AGENTS.md`): `Player.hasSeenRole` se escribía y nunca se leía (la UI sigue el progreso con `currentPlayerIndex`), más 2 imports muertos en `ui/App.kt`. El compilador no da ningún aviso y no hay funciones ni constantes privadas sin usar: el Kotlin ya estaba limpio.
+- `versionCode 11` / `versionName 0.4.2`.
+
+**Descartado deliberadamente** (y por qué): reescribir el shuffle de impostores con `shuffled()` de la stdlib sería 1 línea en vez de 7, pero **es mecánica del juego** y la regla vinculante prohíbe tocarla sin aprobación. Extraer un `ConfirmDialog` común ahorraría líneas, pero sería una abstracción no pedida. Quitar `compose-ui-tooling`/`ui-tooling-preview` (no hay ningún `@Preview` en el proyecto) se midió en **389 bytes**: insignificante, así que se dejaron. Los `modifier` que nunca se pasan se mantienen por ser la convención de Compose.
+
+**Verificado en el artefacto**: `versionCode 11`, firmado (bloque v2/v3), **no** debuggable, `assets/words/*.json` intactos, cadenas clave supervivientes al `shrinkResources` («La palabra es», «ERES IMPOSTOR», «Fase pública…»), `localeConfig` + `AppLocalesMetadataHolderService` + `autoStoreLocales` presentes, `screenOrientation=1` y `configChanges=0xda0` conservados, y `MainActivity`/`AppCompatDelegate` presentes en el DEX minimizado.
+
+**Lint** (2026-10-14): `lintVitalRelease` → *No issues found* y `assembleRelease` completo pasa sin exclusiones. El `lint` completo da 16 hallazgos, **ninguno bloqueante**:
+
+- `DiscouragedApi` y `LockedOrientationActivity` sobre `screenOrientation`: el primero **confirma** el diagnóstico de BUG-11 desde la propia herramienta («Fixed screen orientations will be ignored in most cases, starting from Android 16»); el segundo pide lo contrario de lo que se decidió, así que es una **advertencia deliberada** y se mantiene.
+- `UseKtx` (`ui/App.kt`): `prefs.edit().putBoolean(...).apply()` → `prefs.edit { putBoolean(...) }` (KTX que el proyecto ya tiene). **Pendiente de decidir con el usuario**; no se aplicó para no invalidar el APK ya construido y verificado.
+- `MissingQuantity` ×2 (`values-es`): el plural español exige la cantidad `many`, que aquí solo aplica a **millones** y es inalcanzable con 3–8 jugadores. Documentado como falso positivo en la práctica.
+- El resto son avisos informativos de versiones más nuevas o del `localeConfig` (API 33+, intencionado).
+
+**Aprendizaje de método**: el fallo de `lintVitalRelease` en la primera medición **no era la red**, era el flag `--offline` del propio agente. Ese indicador no es la vía de build del proyecto: sin él, la dependencia se resuelve sola.
+
 ## 7. Post-publicación — mejoras futuras propuestas
 
 > Añadido 2026-09-02 por el usuario. NO implementar en la fase 4: son candidatas a una fase posterior a la publicación en Google Play. Al arrancar cualquiera, moverla a su propio plan con detalle.

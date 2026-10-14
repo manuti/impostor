@@ -1,8 +1,9 @@
-# Bugs conocidos (fases 2 y 2.5)
+# Bugs conocidos (fases 2, 2.5, 3 y 4)
 
 > Registro abierto el **2026-08-26** tras la primera prueba en dispositivo del usuario.
-> Correcciones previstas: **2026-08-27**. Mientras tanto **no publicar el APK v0.3.0 como release**.
-> Fase 2 cerrada. Registro continúa en fase 2.5 (v0.3.x): BUG-5 (2026-08-31), BUG-6 (2026-09-02).
+> Fase 2 cerrada (v0.3.0, publicada el **2026-08-28**). El registro continúa con las fases 2.5 (BUG-5, BUG-6), 3 (BUG-7) y 4 (BUG-8 a BUG-11).
+>
+> *Nota histórica*: el aviso original «no publicar el APK v0.3.0 como release» quedó resuelto al verificarse los bugs en dispositivo y publicarse v0.3.0 el 2026-08-28.
 
 ## BUG-1 — CRÍTICO: fuga visual del rol al pasar de jugador (animación del naipe)
 
@@ -21,21 +22,22 @@
 - **Síntoma**: en modo oscuro, el número del stepper de impostores se ve negro sobre fondo gris oscuro.
 - **Causa raíz (confirmada en código)**: `contentColorFor()` de Material 3 usa el **tema del sistema**, no el de la app. Con la app en oscuro y el sistema en claro, `LocalContentColor` se resuelve a negro → el número (sin color explícito) salía negro sobre el fondo oscuro.
 - **Fix aplicado (2026-08-28)**: (1) en `ImpostorTheme` se fija `LocalContentColor = colorScheme.onBackground` (corrige todos los textos/iconos que dependen del color por defecto, p. ej. el toggle sol/luna); (2) el número del stepper y los botones −/+ usan colores explícitos (incluido el estado deshabilitado).
-- **Estado**: 🔄 corregido en código — pendiente de verificar en dispositivo (APK nuevo en Descargas).
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-08-28)**.
+- **Nota (2026-10-14)**: esta ficha se quedó con el estado «pendiente de verificar» por descuido, mientras la tabla resumen y `BUG-1` ya decían «verificado (2026-08-28)» en el **mismo commit** que creó el archivo (`e189809`, el propio tag `v0.3.0`). Se reconcilia con la tabla: la fase 2 cerró y v0.3.0 se publicó el 2026-08-28, y según la regla del proyecto (PLAN-FASE4 §2) no se publica sin prueba previa en dispositivo.
 
 ## BUG-3 — El ojo del anverso del naipe es demasiado pequeño
 
 - **Severidad**: baja (estética / fidelidad al diseño).
 - **Síntoma / requisito**: el logo del ojo debe ser **enorme y ocupar el máximo posible de la carta**; hoy es un icono fijo de 84dp.
 - **Fix aplicado (2026-08-28)**: el anverso se rediseñó — el ojo ahora ocupa el **máximo posible de la carta** (vector redibujado sin márgenes + `fillMaxWidth(0.96f)` en la zona disponible, dejando solo "TOCA PARA VER" legible abajo).
-- **Estado**: 🔄 corregido en código — pendiente de verificar en dispositivo (APK nuevo en Descargas).
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-08-28)** (misma nota de reconciliación que BUG-2).
 
 ## BUG-4 — Pupila del ojo poco visible en tema claro
 
 - **Severidad**: baja/media (contraste).
 - **Síntoma**: en modo claro, la pupila ámbar (`#F59E0B`) sobre el anverso blanco tiene poco contraste.
 - **Fix aplicado (2026-08-28, junto con BUG-3)**: el ojo se dibuja con dos colores por tema en `GameColors` (`eye` + `eyePupil`): en oscuro, ojo claro con pupila índigo; en claro, ojo índigo con pupila ámbar (marca de la app). Contraste AA en ambos temas.
-- **Estado**: 🔄 corregido en código — pendiente de verificar en dispositivo (APK nuevo en Descargas).
+- **Estado**: ✅ **corregido y verificado en dispositivo (2026-08-28)** (misma nota de reconciliación que BUG-2).
 
 ## BUG-5 — El pie "Pasa el móvil" repetía el nombre del jugador activo en vez del siguiente (M-2, v0.3.3)
 

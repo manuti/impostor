@@ -18,9 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.impostor.game.R
 import com.impostor.game.game.GameConfig
 import com.impostor.game.game.GamePhase
 import com.impostor.game.game.GameState
@@ -119,12 +117,7 @@ private fun AppContent() {
     }
 
     val playerSawRole: (Int) -> Unit = { index ->
-        gameState = gameState.copy(
-            players = gameState.players.mapIndexed { i, p ->
-                if (i == index) p.copy(hasSeenRole = true) else p
-            },
-            currentPlayerIndex = index + 1,
-        )
+        gameState = gameState.copy(currentPlayerIndex = index + 1)
     }
 
     // Requisito §3.15: sin pistas, el primer participante (quien abre el debate)

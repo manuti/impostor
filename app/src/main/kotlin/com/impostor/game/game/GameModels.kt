@@ -10,7 +10,6 @@ data class Player(
     val name: String,
     val role: Role,
     val isAlive: Boolean = true,
-    val hasSeenRole: Boolean = false,
 )
 
 data class WordPair(

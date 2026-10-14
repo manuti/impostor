@@ -2,7 +2,7 @@
 
 Juego de deducción social **nativo para Android** (Kotlin + Jetpack Compose) en el que todos los jugadores conocen una palabra secreta excepto uno: **el impostor**, que debe fingir y adivinar la palabra sin ser descubierto.
 
-Versión actual: **v0.4.1** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores, mejoras intermedias de la fase 2.5, **multidioma (español e inglés) desde la fase 3** y **pulido estético con accesibilidad AA revisada desde v0.4.1**).
+Versión actual: **v0.4.2** (modo local *pass & play*, un solo dispositivo que se pasa de mano en mano; usabilidad mejorada para personas mayores, mejoras intermedias de la fase 2.5, **multidioma (español e inglés) desde la fase 3**, **pulido estético con accesibilidad AA revisada desde v0.4.1** y **release optimizado con R8 desde v0.4.2**).
 
 El juego pertenece al género de los **juegos de deducción social**: todos los jugadores conocen una palabra secreta excepto uno, y el grupo debe descubrir el rol oculto y la lealtad de los demás razonando y escuchando, mientras el impostor finge ([Wikipedia: *Juego de deducción social*](https://es.wikipedia.org/wiki/Juego_de_deducci%C3%B3n_social) / [*Social deduction game*](https://en.wikipedia.org/wiki/Social_deduction_game)).
 
@@ -18,7 +18,7 @@ El juego pertenece al género de los **juegos de deducción social**: todos los 
 
 El juego se juega en dos fases que el género distingue con claridad: la **fase privada** (cada jugador mira su carta en secreto) y la **fase pública** (debate abierto, acusaciones y votación). La app nombra la segunda en pantalla («Fase pública · debated y votad») para marcar el cambio de fase.
 
-## Características actuales (v0.4.1)
+## Características actuales (v0.4.2)
 
 - Modo local **pass & play** (un solo dispositivo).
 - **110 palabras propias** en 11 categorías (Animales, Comida, Lugares, Objetos, Profesiones, Deportes, Países, Naturaleza, Conceptos, Fantasía, Películas).
@@ -40,6 +40,7 @@ El juego se juega en dos fases que el género distingue con claridad: la **fase 
 - **Contenido del juego traducible y editable por la comunidad**: las 110 palabras y sus pistas (11 categorías) viven en [`app/src/main/assets/words/`](app/src/main/assets/words) (`es-ES.json`, `en-GB.json`), fáciles de editar desde GitHub; [`tools/validate_words.py`](tools/validate_words.py) valida el formato y la coherencia entre idiomas, y los PR de idioma requieren la revisión del code owner (`.github/`).
 - **Pulido estético y accesibilidad AA revisada (v0.4.1)**: la configuración y el alta de jugadores se agrupan en **tarjetas**; el botón deshabilitado es un contorno legible que explica **por qué** no se puede empezar; los títulos refuerzan la jerarquía con escala y espaciado (sin `Bold` en todo); los puntos de progreso del reparto distinguen «visto / actual / pendiente» **por relleno y contorno**, no solo por color; los avisos llevan icono; la lista de jugadores del debate es **vertical** con **icono de voto** y el aviso de votar justo encima; los diálogos destructivos abren el foco en **Cancelar**; el `Switch` de la pista tiene área táctil de fila completa; y la carta de rol se distingue por **color de fondo + texto centrado** («La palabra es …» / «ERES IMPOSTOR»). Contrastes medidos: aviso claro y burbujas de rol de `EndGameScreen` corregidos para superar 4,5:1.
 - **Pantalla bloqueada en vertical (v0.4.1)**: girar el móvil no hace nada y no reinicia la partida en ninguna fase (BUG-11). Se declara `screenOrientation="portrait"` y, además, `configChanges`, porque desde Android 16 el sistema ignora el bloqueo de orientación en pantallas de 600 dp o más.
+- **Release optimizado con R8 (v0.4.2)**: el APK distribuido sale de `assembleRelease` con R8 activo (minify + shrinkResources) en lugar del APK de depuración de versiones anteriores. Medido el 2026-10-14 sobre el mismo código: **7,45 MB → 1,63 MB (−78 %)**. No se añadió ninguna dependencia: es la herramienta que ya trae Android.
 
 ## Bugs corregidos
 
@@ -60,18 +61,24 @@ Las versiones están centralizadas en el version catalog [`gradle/libs.versions.
 
 ```bash
 # Linux / macOS / Windows (con JDK 17+ y Android SDK)
-./gradlew :app:assembleDebug
+./gradlew :app:assembleRelease
 
 # Termux (Android) — el shebang de gradlew no resuelve; usar sh
 pkg install openjdk-17 aapt2   # una vez
-sh gradlew :app:assembleDebug  # offline una vez cacheada la distribución de Gradle
+sh gradlew :app:assembleRelease
 ```
 
-El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. En Termux, cópialo a Descargas para instalarlo:
+Desde la **v0.4.2** el artefacto que se prueba y se publica es el **release** (`assembleRelease`), con R8 activo. Queda en `app/build/outputs/apk/release/app-release.apk`.
+
+> **Nota sobre la firma**: mientras no exista el keystore de release de la fase 4 (lo custodia el usuario), el `release` se firma con la **clave de depuración** (`signingConfig = signingConfigs.getByName("debug")` en `app/build.gradle.kts`), la misma que usaban los APKs anteriores, así que se instala encima sin desinstalar. Sustituir por el keystore real al publicar.
+
+Para desarrollo rápido puede seguir usándose el APK de depuración (`:app:assembleDebug`, sin R8); **no** es el que se publica, y su tamaño es ~7× mayor. En Termux, copia el artefacto a Descargas para instalarlo:
 
 ```bash
-cp app/build/outputs/apk/debug/app-debug.apk ~/storage/downloads/
+cp app/build/outputs/apk/release/app-release.apk ~/storage/downloads/impostor-v0.4.2.apk
 ```
+
+El build de release ejecuta el **lint vital** (`lintVitalRelease`) como parte de `assembleRelease`; para el análisis completo, `sh gradlew :app:lint`. Ambos pasan sin errores en la v0.4.2.
 
 Los APKs de las versiones publicadas están en [Releases](https://github.com/manuti/impostor/releases).
 
@@ -109,6 +116,7 @@ referencias/                 # Clon local de la referencia React (no se sube)
 - [x] **v0.3.5 — Fase 3: mejora pre-i18n (C-1)** (la palabra secreta no se repite entre partidas consecutivas)
 - [x] **v0.4.0 — Fase 3: internacionalización (i18n)** (interfaz en inglés y español con selector dentro de la app y aviso al cambiar de idioma; contenido del juego traducible en JSON)
 - [x] **v0.4.1 — Pulido estético (pre-Publicación)** (jerarquía visual con tarjetas, botón deshabilitado legible con su motivo, estados por forma y no solo color, lista de votación vertical con icono, foco en la opción segura de los diálogos, contraste AA corregido; carta de rol con color + texto centrado; pantalla bloqueada en vertical sin reinicio al girar)
+- [x] **v0.4.2 — Release optimizado** (R8 activado por primera vez: −78 % de tamaño; código muerto eliminado; el artefacto distribuido pasa de depuración a release)
 - [ ] Fase 4 — Publicación en Google Play: punto de partida y checklist en [`docs/PLAN-FASE4.md`](docs/PLAN-FASE4.md)
 
 ## Agradecimientos
