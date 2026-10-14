@@ -104,6 +104,7 @@ docs/PLAN-FASE2.5.md         # Plan de mejoras intermedias (v0.3.1–v0.3.4)
 docs/PLAN-FASE3.md           # Plan de la fase 3: C-1 (pre-i18n, v0.3.5) publicada + i18n (v0.4.0) con reglas vinculantes
 docs/PLAN-FASE4.md           # Plan de publicación en Google Play (lecciones + checklist)
 gradle/libs.versions.toml    # Version catalog
+AGENTS.md                    # Modo de trabajo para agentes: escalera de reutilización (YAGNI) y diff mínimo
 referencias/                 # Clon local de la referencia React (no se sube)
 ```
 

@@ -120,11 +120,13 @@ El release **no tenía ninguna optimización activada** (`isMinifyEnabled = fals
 
 **Verificado en el artefacto**: `versionCode 11`, firmado (bloque v2/v3), **no** debuggable, `assets/words/*.json` intactos, cadenas clave supervivientes al `shrinkResources` («La palabra es», «ERES IMPOSTOR», «Fase pública…»), `localeConfig` + `AppLocalesMetadataHolderService` + `autoStoreLocales` presentes, `screenOrientation=1` y `configChanges=0xda0` conservados, y `MainActivity`/`AppCompatDelegate` presentes en el DEX minimizado.
 
+**Probado en dispositivo (Android 16, 2026-10-14)**: versión 0.4.2 / versionCode 11 "todo correcto" según el usuario. Con esto queda cerrado el riesgo de R8 (runtime) que era el único punto no cubierto por la verificación estática.
+
 **Lint** (2026-10-14): `lintVitalRelease` → *No issues found* y `assembleRelease` completo pasa sin exclusiones. El `lint` completo da 16 hallazgos, **ninguno bloqueante**:
 
 - `DiscouragedApi` y `LockedOrientationActivity` sobre `screenOrientation`: el primero **confirma** el diagnóstico de BUG-11 desde la propia herramienta («Fixed screen orientations will be ignored in most cases, starting from Android 16»); el segundo pide lo contrario de lo que se decidió, así que es una **advertencia deliberada** y se mantiene.
-- `UseKtx` (`ui/App.kt`): `prefs.edit().putBoolean(...).apply()` → `prefs.edit { putBoolean(...) }` (KTX que el proyecto ya tiene). **Pendiente de decidir con el usuario**; no se aplicó para no invalidar el APK ya construido y verificado.
-- `MissingQuantity` ×2 (`values-es`): el plural español exige la cantidad `many`, que aquí solo aplica a **millones** y es inalcanzable con 3–8 jugadores. Documentado como falso positivo en la práctica.
+- `UseKtx` (`ui/App.kt`): `prefs.edit().putBoolean(...).apply()` → `prefs.edit { putBoolean(...) }` (KTX que el proyecto ya tiene). **Decidido 2026-10-14: se aplica** — es la rung 2/3 de `AGENTS.md` (usar lo ya instalado). No se aplicó en v0.4.2 para no invalidar el APK ya construido y verificado; va en el primer cambio de la ronda siguiente.
+- `MissingQuantity` ×2 (`values-es`): el plural español exige la cantidad `many`, que aquí solo aplica a **millones** y es inalcanzable con 3–8 jugadores. **Decidido 2026-10-14: NO se añade** — sería boilerplate muerto por definición (y `AGENTS.md` prohíbe el que nadie pidió). Queda documentado como falso positivo en la práctica y el aviso de lint se acepta como conocido.
 - El resto son avisos informativos de versiones más nuevas o del `localeConfig` (API 33+, intencionado).
 
 **Aprendizaje de método**: el fallo de `lintVitalRelease` en la primera medición **no era la red**, era el flag `--offline` del propio agente. Ese indicador no es la vía de build del proyecto: sin él, la dependencia se resuelve sola.
